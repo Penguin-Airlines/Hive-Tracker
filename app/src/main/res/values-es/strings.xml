@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Hive Tráckero</string>
+    <string name="home_page_content_description">Página de inicio de la aplicación HiveTracker</string>
+    <string name="hives_page_content_description">Página de urticarias para la aplicación HiveTracker</string>
+    <string name="tasks_page_content_description">Página de tareas de la aplicación HiveTracker</string>
+    <string name="recordings_page_content_description">Página de grabaciones de la aplicación HiveTracker</string>
+</resources>

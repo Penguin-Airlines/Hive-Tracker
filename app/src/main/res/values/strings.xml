@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">Hive Traker</string>
+    <string name="app_name">Hive Tracker</string>
+    <string name="home_page_content_description">Homepage for the HiveTracker Application</string>
+    <string name="hives_page_content_description">Hives Page for the HiveTracker Application</string>
+    <string name="tasks_page_content_description">Tasks Page for the HiveTracker Application</string>
+    <string name="recordings_page_content_description">Recordings Page for the HiveTracker Application</string>
 </resources>
