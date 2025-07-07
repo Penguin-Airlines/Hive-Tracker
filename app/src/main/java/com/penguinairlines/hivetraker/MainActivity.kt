@@ -17,6 +17,7 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.KeyboardVoice
 import androidx.compose.material.icons.outlined.Task
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
@@ -35,6 +36,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.penguinairlines.hivetraker.ui.hives.HivesScreen
 import com.penguinairlines.hivetraker.ui.theme.HiveTrakerTheme
 
 class MainActivity : ComponentActivity() {
@@ -51,7 +53,11 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     modifier = Modifier,
                     bottomBar = {
-                        NavigationBar(windowInsets = NavigationBarDefaults.windowInsets) {
+                        NavigationBar(
+                            windowInsets = NavigationBarDefaults.windowInsets,
+                            containerColor = MaterialTheme.colorScheme.surface,
+                            contentColor = MaterialTheme.colorScheme.onSurface
+                        ) {
                             NavDestination.entries.forEachIndexed { index, destination ->
                                 val selected: Boolean = selectedDestination == index
                                 val icon = if (selected) destination.iconSelected else destination.icon
@@ -87,16 +93,6 @@ fun HomeScreen(modifier: Modifier = Modifier) {
         contentAlignment = Alignment.Center
     ) {
         Text("Home")
-    }
-}
-
-@Composable
-fun HivesScreen(modifier: Modifier = Modifier) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text("Hives")
     }
 }
 
