@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import com.penguinairlines.hivetraker.data.models.User
 import com.penguinairlines.hivetraker.data.models.Yard
 import com.penguinairlines.hivetraker.data.providers.HiveProvider
-import com.penguinairlines.hivetraker.data.providers.test.TestHiveProvider
 import com.penguinairlines.hivetraker.data.providers.test.TestProvider
 
 @Composable
@@ -27,9 +26,9 @@ fun HivesScreen(modifier: Modifier = Modifier) {
     val currentYard = Yard("", currentUser)
 
     val provider = TestProvider()
-    val hiveProvider: HiveProvider = provider.getHiveProvider(currentYard, "");
+    val hiveProvider: HiveProvider = provider.getHiveProvider(currentYard, "")
     Column (
-        modifier = Modifier.fillMaxSize().statusBarsPadding().padding(8.dp),
+        modifier = modifier.fillMaxSize().statusBarsPadding().padding(8.dp),
     ) {
 
         Text(
