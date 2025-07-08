@@ -15,12 +15,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.penguinairlines.hivetraker.data.models.User
+import com.penguinairlines.hivetraker.data.models.Yard
 import com.penguinairlines.hivetraker.data.providers.HiveProvider
 import com.penguinairlines.hivetraker.data.providers.test.TestHiveProvider
+import com.penguinairlines.hivetraker.data.providers.test.TestProvider
 
 @Composable
 fun HivesScreen(modifier: Modifier = Modifier) {
-    val hiveProvider: HiveProvider = TestHiveProvider();
+    val currentUser = User("", "")
+    val currentYard = Yard("", currentUser)
+
+    val provider = TestProvider()
+    val hiveProvider: HiveProvider = provider.getHiveProvider(currentYard, "");
     Column (
         modifier = Modifier.fillMaxSize().statusBarsPadding().padding(8.dp),
     ) {
