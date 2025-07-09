@@ -3,6 +3,7 @@ package com.penguinairlines.hivetraker.data.providers.test
 import android.location.Location
 import com.penguinairlines.hivetraker.data.providers.HiveProvider
 import com.penguinairlines.hivetraker.data.models.Hive
+import com.penguinairlines.hivetraker.data.models.HiveStatus
 import com.penguinairlines.hivetraker.data.models.User
 import com.penguinairlines.hivetraker.data.models.Yard
 
@@ -20,6 +21,7 @@ class TestHiveProvider: HiveProvider {
             "Hive 1",
             yard,
             location = location,
+            status = HiveStatus.CRITICAL,
             frameCount = 5u,
             description = "A beautiful hive",
         ),
@@ -27,6 +29,7 @@ class TestHiveProvider: HiveProvider {
             "Hive 2",
             yard,
             location = location,
+            status = HiveStatus.IN_PROGRESS,
             frameCount = 7u,
             description = "A beautifuler hive",
         ),
@@ -34,6 +37,7 @@ class TestHiveProvider: HiveProvider {
             "Hive 3",
             yard,
             location = location,
+            status = HiveStatus.OKAY,
             frameCount = 2u,
             description = "The hive I leave alone",
         ),
