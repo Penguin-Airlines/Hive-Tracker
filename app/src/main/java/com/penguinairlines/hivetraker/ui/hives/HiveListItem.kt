@@ -1,10 +1,15 @@
 package com.penguinairlines.hivetraker.ui.hives
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -30,6 +35,11 @@ private fun HiveImageListItem(hive: Hive, modifier: Modifier = Modifier) {
         Icons.Default.Hive,
         hive.description,
         modifier = modifier
+            .border(
+                width = 4.dp,
+                color = MaterialTheme.colorScheme.surfaceVariant,
+                shape = RoundedCornerShape(50)
+            ),
     )
 }
 
@@ -39,11 +49,11 @@ private fun HiveTextListItem(hive: Hive, modifier: Modifier = Modifier) {
         modifier = modifier
     ) {
         Text(
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.headlineMedium,
             text = hive.name
         )
         Text(
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.headlineSmall,
             text = "\t" + hive.description
         )
     }
@@ -79,11 +89,17 @@ fun HiveListItem(hive: Hive) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp),
+                .padding(8.dp)
+                .height(IntrinsicSize.Min)
+            ,
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Left-Icon
-            HiveImageListItem(hive)
+            HiveImageListItem(hive,
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .aspectRatio(1f)
+            )
             // Center Text
             HiveTextListItem(hive,
                 Modifier
