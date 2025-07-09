@@ -61,7 +61,7 @@ private fun HiveStatusListItem(hive: Hive, modifier: Modifier = Modifier) {
     ) {
         Text(
             text = hive.status.text,
-            color = Color(getColor(LocalContext.current, R.color.white)),
+            color = Color(getColor(LocalContext.current, android.R.color.white)),
             style = MaterialTheme.typography.labelMedium
         )
     }
