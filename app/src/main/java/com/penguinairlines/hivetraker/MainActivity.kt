@@ -44,7 +44,6 @@ import com.penguinairlines.hivetraker.data.models.User
 import com.penguinairlines.hivetraker.data.models.Yard
 import com.penguinairlines.hivetraker.ui.hives.HivesScreen
 import com.penguinairlines.hivetraker.ui.theme.HiveTrakerTheme
-import com.penguinairlines.hivetraker.ui.hives.PreviewHiveTemplate
 
 
 class MainActivity : ComponentActivity() {
@@ -153,7 +152,7 @@ fun HiveTrackerNavHost(
                     NavDestination.HOME -> HomeScreen()
                     NavDestination.HIVES -> HivesScreen()
                     NavDestination.TASKS -> TasksScreen()
-                    NavDestination.RECORDINGS -> PreviewHiveTemplate()
+                    NavDestination.RECORDINGS -> RecordingsScreen()
                 }
             }
         }
