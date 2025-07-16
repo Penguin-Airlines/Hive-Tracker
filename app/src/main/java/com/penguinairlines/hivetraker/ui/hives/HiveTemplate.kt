@@ -1,35 +1,28 @@
 package com.penguinairlines.hivetraker.ui.hives
 
+import android.location.Location
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.penguinairlines.hivetraker.data.models.Hive
+import com.penguinairlines.hivetraker.data.models.HiveStatus
 import com.penguinairlines.hivetraker.data.models.User
 import com.penguinairlines.hivetraker.data.models.Yard
-import com.penguinairlines.hivetraker.data.providers.HiveProvider
-import com.penguinairlines.hivetraker.data.providers.test.TestProvider
-import java.util.ArrayList
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 
 
-Hive(
-"Hive 1",
-yard,
-location = location,
-status = HiveStatus.CRITICAL,
-frameCount = 5u,
-description = "A beautiful hive",
-)
+
 @Composable
 fun HiveTemplate(
     modifier: Modifier = Modifier,
@@ -67,27 +60,6 @@ fun HiveTemplate(
         }
 
         item {
-            // Optional photo (replace with real URI/Image when available)
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-            ) {
-                // Placeholder Image
-                androidx.compose.foundation.Image(
-                    painter = androidx.compose.ui.res.painterResource(
-                        id = com.penguinairlines.hivetraker.R.drawable.placeholder_hive
-                    ),
-                    contentDescription = "Hive Image",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                )
-            }
-        }
-
-        item {
             // Description section
             Text(
                 text = "Description",
@@ -110,7 +82,7 @@ fun HiveTemplate(
                 modifier = Modifier.padding(top = 12.dp, bottom = 4.dp)
             )
             Text(
-                text = hiveData.location ?: "Unknown",
+                text = hiveData.location.toString() ?: "Unknown",
                 style = MaterialTheme.typography.bodyMedium
             )
             HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp))
@@ -143,4 +115,28 @@ fun HiveTemplate(
             )
         }
     }
+}
+@Preview(showBackground = true)
+@Composable
+fun PreviewHiveTemplate() {
+
+    val mockYard = Yard(
+        "Yard 1",
+        User(
+            "Burt Miller",
+            "burtmiller@burtsbees.com"
+        )
+    )
+    val location = Location("")
+
+    val mockHive = Hive(
+        name = "Hive 1",
+        yard = mockYard,
+        location = location,
+        status = HiveStatus.CRITICAL,
+        frameCount = 5u,
+        description = "A beautiful hive with very active bees.",
+    )
+
+    HiveTemplate(hiveData = mockHive)
 }
