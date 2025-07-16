@@ -48,13 +48,13 @@ fun HiveTemplate(
             Card(
                 shape = MaterialTheme.shapes.medium,
                 colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.errorContainer
+                    Color(getColor(LocalContext.current, hiveData.status.color))
                 ),
                 modifier = Modifier.padding(bottom = 12.dp)
             ) {
                 Text(
                     text = hiveData.status.text,
-                    color = Color(getColor(LocalContext.current, hiveData.status.color)),
+                    color = Color(getColor(LocalContext.current, android.R.color.white)),
                     style = MaterialTheme.typography.labelLarge,
                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                 )
