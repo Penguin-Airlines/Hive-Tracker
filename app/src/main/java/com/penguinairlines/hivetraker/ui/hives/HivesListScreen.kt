@@ -12,18 +12,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.penguinairlines.hivetraker.data.models.Hive
 import com.penguinairlines.hivetraker.data.models.User
 import com.penguinairlines.hivetraker.data.models.Yard
 import com.penguinairlines.hivetraker.data.providers.HiveProvider
+import com.penguinairlines.hivetraker.data.providers.ProviderFactory
 import com.penguinairlines.hivetraker.data.providers.test.TestProvider
 
 @Composable
-fun HivesScreen(modifier: Modifier = Modifier) {
-    val currentUser = User("", "")
-    val currentYard = Yard("", currentUser)
-
-    val provider = TestProvider()
-    val hiveProvider: HiveProvider = provider.getHiveProvider(currentYard, "")
+fun ListHivesScreen(hiveOnClick: (hive: Hive) -> Unit, hiveProvider: HiveProvider, currentUser: User, currentYard: Yard, modifier: Modifier = Modifier) {
     Column (
         modifier = modifier.fillMaxSize().statusBarsPadding().padding(8.dp),
     ) {
@@ -37,7 +35,11 @@ fun HivesScreen(modifier: Modifier = Modifier) {
             modifier = Modifier.fillMaxSize().statusBarsPadding()
         ) {
             items(hiveProvider.getHives()) { hive ->
-                HiveListItem(hive)
+                HiveListItem(hive,
+                    onclick = {
+                        hiveOnClick(hive)
+                    }
+                )
             }
         }
     }

@@ -36,7 +36,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.penguinairlines.hivetraker.ui.hives.HivesScreen
+import com.penguinairlines.hivetraker.ui.hives.HivesNavHost
 import com.penguinairlines.hivetraker.ui.theme.HiveTrakerTheme
 
 class MainActivity : ComponentActivity() {
@@ -143,7 +143,7 @@ fun HiveTrackerNavHost(
             composable(destination.route) {
                 when (destination) {
                     NavDestination.HOME -> HomeScreen()
-                    NavDestination.HIVES -> HivesScreen()
+                    NavDestination.HIVES -> HivesNavHost()
                     NavDestination.TASKS -> TasksScreen()
                     NavDestination.RECORDINGS -> RecordingsScreen()
                 }
