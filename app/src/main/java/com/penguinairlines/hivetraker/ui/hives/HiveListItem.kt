@@ -78,13 +78,14 @@ private fun HiveStatusListItem(hive: Hive, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun HiveListItem(hive: Hive) {
+fun HiveListItem(hive: Hive, onclick: () -> Unit) {
     // Container for the List Item
     Card (
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+        onClick = onclick
     ) {
         Row(
             modifier = Modifier
