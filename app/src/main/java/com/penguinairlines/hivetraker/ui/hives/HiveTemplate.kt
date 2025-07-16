@@ -20,7 +20,9 @@ import com.penguinairlines.hivetraker.data.models.Yard
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat.getColor
 
 
 @Composable
@@ -46,13 +48,13 @@ fun HiveTemplate(
             Card(
                 shape = MaterialTheme.shapes.medium,
                 colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.errorContainer
+                    Color(getColor(LocalContext.current, hiveData.status.color))
                 ),
                 modifier = Modifier.padding(bottom = 12.dp)
             ) {
                 Text(
                     text = hiveData.status.text,
-                    color = MaterialTheme.colorScheme.onErrorContainer,
+                    color = Color(getColor(LocalContext.current, android.R.color.white)),
                     style = MaterialTheme.typography.labelLarge,
                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                 )
