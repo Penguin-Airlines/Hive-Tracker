@@ -1,7 +1,6 @@
 package com.penguinairlines.hivetraker.data.models
 
 import android.location.Location
-import kotlin.collections.emptyList
 data class Hive(
     val name: String,
     val yard: Yard,
