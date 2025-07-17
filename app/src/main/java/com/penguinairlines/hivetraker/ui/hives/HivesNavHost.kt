@@ -2,7 +2,6 @@ package com.penguinairlines.hivetraker.ui.hives
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -16,11 +15,11 @@ import kotlinx.serialization.Serializable
 
 @Composable
 fun HivesNavHost() {
-    val hiveNavController = rememberNavController();
+    val hiveNavController = rememberNavController()
 
     val currentProviderFactory: ProviderFactory = remember { TestProvider() }
-    val currentUser = remember{User("", "")};
-    val currentYard = remember{Yard("", currentUser)};
+    val currentUser = remember{User("", "")}
+    val currentYard = remember{Yard("", currentUser)}
     val currentHiveProvider = remember { currentProviderFactory.getHiveProvider(currentYard, "") }
 
     NavHost(

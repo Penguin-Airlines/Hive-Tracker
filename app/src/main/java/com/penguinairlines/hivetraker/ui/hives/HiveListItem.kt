@@ -83,7 +83,7 @@ fun HiveListItem(hive: Hive, onclick: () -> Unit) {
     Card (
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp),
+            .padding(bottom = 8.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
         onClick = onclick
     ) {
