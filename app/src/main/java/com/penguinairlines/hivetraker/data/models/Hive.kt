@@ -8,10 +8,11 @@ data class Hive(
     var location: Location,
     var status: HiveStatus,
     var frameCount: UInt,
-    var description: String,
-    var logList: List<Log> = emptyList()
+    var description: String
 
 ) {
+    val logList: MutableList<Log> = mutableListOf() // <--- Added list of logs need to implement way to display on hiveTemplate.kt
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is Hive) return false

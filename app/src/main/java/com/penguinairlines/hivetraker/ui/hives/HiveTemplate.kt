@@ -44,7 +44,7 @@ fun HiveTemplate(
                 modifier = Modifier.padding(bottom = 8.dp)
             )
 
-            // Hive status chip
+            // Hive status blob
             Card(
                 shape = MaterialTheme.shapes.medium,
                 colors = CardDefaults.cardColors(
@@ -77,7 +77,7 @@ fun HiveTemplate(
         }
 
         item {
-            // Location
+            // Location will probably change later just a temporary implementation
             Text(
                 text = "Location",
                 style = MaterialTheme.typography.titleMedium,
@@ -112,7 +112,7 @@ fun HiveTemplate(
                 modifier = Modifier.padding(bottom = 4.dp)
             )
             Text(
-                text = hiveData.yard.name, // assuming Yard has a 'name' property
+                text = hiveData.yard.name,
                 style = MaterialTheme.typography.bodyMedium
             )
         }
