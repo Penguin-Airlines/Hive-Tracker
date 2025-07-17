@@ -1,12 +1,13 @@
 package com.penguinairlines.hivetraker.ui.hives
 
 import android.location.Location
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -20,16 +21,53 @@ import com.penguinairlines.hivetraker.data.models.Yard
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.core.content.ContextCompat.getColor
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TopAppBar
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HiveTemplate(
-    modifier: Modifier = Modifier,
-    hiveData: Hive
+fun HiveDetailScreen(
+    hiveData: Hive,
+    onEditClick: (hive: Hive) -> Unit = { /* Default edit action */ },
+    onBackClick : () -> Unit = { /* Default back navigation handler */ },
+    modifier: Modifier = Modifier
 ) {
+    Scaffold (
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = hiveData.name
+                    )
+                },
+                modifier = Modifier,
+                navigationIcon = {
+                    IconButton(
+                        onClick = onBackClick,
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(onClick = {
+                        onEditClick(hiveData)
+                    }) {
+                        Icon(
+                            imageVector = Icons.Outlined.Edit,
+                            contentDescription = "Edit Hive"
+                        )
+                    }
+                }
+            )
+        },
+    ){ it ->
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
@@ -48,13 +86,13 @@ fun HiveTemplate(
             Card(
                 shape = MaterialTheme.shapes.medium,
                 colors = CardDefaults.cardColors(
-                    Color(getColor(LocalContext.current, hiveData.status.color))
+                    containerColor = MaterialTheme.colorScheme.errorContainer
                 ),
                 modifier = Modifier.padding(bottom = 12.dp)
             ) {
                 Text(
                     text = hiveData.status.text,
-                    color = Color(getColor(LocalContext.current, android.R.color.white)),
+                    color = MaterialTheme.colorScheme.onErrorContainer,
                     style = MaterialTheme.typography.labelLarge,
                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                 )
@@ -116,7 +154,8 @@ fun HiveTemplate(
                 style = MaterialTheme.typography.bodyMedium
             )
         }
-    }
+    }}
+
 }
 @Preview(showBackground = true)
 @Composable
@@ -140,5 +179,5 @@ fun PreviewHiveTemplate() {
         description = "A beautiful hive with very active bees.",
     )
 
-    HiveTemplate(hiveData = mockHive)
+    HiveDetailScreen(hiveData = mockHive)
 }

@@ -1,7 +1,7 @@
 package com.penguinairlines.hivetraker
 
-import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Hive
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.KeyboardVoice
@@ -17,6 +18,7 @@ import androidx.compose.material.icons.outlined.Hive
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.KeyboardVoice
 import androidx.compose.material.icons.outlined.Task
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -33,11 +35,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.penguinairlines.hivetraker.ui.hives.HivesNavHost
+import com.penguinairlines.hivetraker.data.models.Hive
+import com.penguinairlines.hivetraker.data.models.HiveStatus
+import com.penguinairlines.hivetraker.data.models.User
+import com.penguinairlines.hivetraker.data.models.Yard
+import com.penguinairlines.hivetraker.ui.MainBottomBar
+import com.penguinairlines.hivetraker.ui.navigation.MainNavGraph
+import com.penguinairlines.hivetraker.ui.navigation.NavDestination
 import com.penguinairlines.hivetraker.ui.theme.HiveTrakerTheme
 
 
@@ -46,42 +55,30 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+        /* Structural print loop. I have no fricken clue why this is needed */
+        for (destination in NavDestination.entries) {
+            Log.d("NavDestination", "Route: ${destination.route}, Label: ${destination.label}")
+        }
+
         setContent {
             HiveTrakerTheme {
                 val navController = rememberNavController()
-                val startDestination = NavDestination.HOME
-                var selectedDestination by rememberSaveable { mutableIntStateOf(startDestination.ordinal) }
+                val startDestination = NavDestination.Home
 
                 Scaffold(
                     modifier = Modifier,
                     bottomBar = {
-                        NavigationBar(
-                            windowInsets = NavigationBarDefaults.windowInsets,
-                            containerColor = MaterialTheme.colorScheme.surface,
-                            contentColor = MaterialTheme.colorScheme.onSurface
-                        ) {
-                            NavDestination.entries.forEachIndexed { index, destination ->
-                                val selected: Boolean = selectedDestination == index
-                                val icon = if (selected) destination.iconSelected else destination.icon
-                                NavigationBarItem(
-                                    selected = selected,
-                                    onClick = {
-                                        navController.navigate(route = destination.route)
-                                        selectedDestination = index
-                                    },
-                                    icon = {
-                                        Icon (
-                                            icon,
-                                            contentDescription = stringResource(destination.contentDescription)
-                                        )
-                                    },
-                                    label = { Text(destination.label) }
-                                )
+                        MainBottomBar(
+                            navController = navController,
+                            onDestinationSelected = { index ->
+
                             }
-                        }
+
+                        )
                     }
+
                 ) { contentPadding ->
-                    HiveTrackerNavHost(navController, startDestination, modifier = Modifier.padding(contentPadding))
+                    MainNavGraph(navController, startDestination, modifier = Modifier.padding(contentPadding))
                 }
             }
         }
@@ -115,41 +112,5 @@ fun RecordingsScreen(modifier: Modifier = Modifier) {
         contentAlignment = Alignment.Center
     ) {
         Text("Recordings")
-    }
-}
-
-enum class NavDestination (
-    val route: String,
-    val label: String,
-    val icon: ImageVector,
-    val iconSelected: ImageVector,
-    val contentDescription: Int
-) {
-    HOME("home", "Home", Icons.Outlined.Home, Icons.Filled.Home, R.string.home_page_content_description),
-    HIVES("hives", "Hives", Icons.Outlined.Hive, Icons.Filled.Hive, R.string.home_page_content_description),
-    TASKS("tasks", "Tasks", Icons.Outlined.Task, Icons.Filled.Task, R.string.home_page_content_description),
-    RECORDINGS("recordings", "Recordings", Icons.Outlined.KeyboardVoice, Icons.Filled.KeyboardVoice, R.string.home_page_content_description)
-}
-
-@Composable
-fun HiveTrackerNavHost(
-    navController: NavHostController,
-    startDestination: NavDestination,
-    modifier: Modifier = Modifier
-) {
-    NavHost(
-        navController,
-        startDestination = startDestination.route
-    ) {
-        NavDestination.entries.forEach { destination ->
-            composable(destination.route) {
-                when (destination) {
-                    NavDestination.HOME -> HomeScreen()
-                    NavDestination.HIVES -> HivesNavHost()
-                    NavDestination.TASKS -> TasksScreen()
-                    NavDestination.RECORDINGS -> RecordingsScreen()
-                }
-            }
-        }
     }
 }
