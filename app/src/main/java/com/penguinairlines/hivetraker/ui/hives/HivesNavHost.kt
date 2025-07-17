@@ -2,6 +2,7 @@ package com.penguinairlines.hivetraker.ui.hives
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -29,7 +30,12 @@ fun HivesNavHost() {
             ListHivesScreen(
                 hiveOnClick = { hive: Hive ->
                     hiveNavController.navigate(
-                        EditHiveScreenDestination(hive.name)
+                        HiveDetailsScreenDestination(hive.name)
+                    )
+                },
+                addHiveOnClick = {
+                    hiveNavController.navigate(
+                        AddHiveScreenDestination
                     )
                 },
                 currentHiveProvider,
@@ -39,11 +45,45 @@ fun HivesNavHost() {
 
         }
 
+        composable<HiveDetailsScreenDestination> {
+            val args = it.toRoute<HiveDetailsScreenDestination>()
+            val hive = currentHiveProvider.getHive(args.hiveName)
+            HiveDetailScreen(
+                hive,
+                onBackClick = {
+                    hiveNavController.navigateUp()
+                },
+                onEditClick = {
+                    hiveNavController.navigate(
+                        EditHiveScreenDestination(hive.name)
+                    )
+                }
+            )
+        }
+
         composable<EditHiveScreenDestination> {
             val args = it.toRoute<EditHiveScreenDestination>()
             val hive = currentHiveProvider.getHive(args.hiveName)
-            EditHiveScreen(hive)
+            EditHiveScreen(
+                hive,
+                saveHive = { updatedHive ->
+                    currentHiveProvider.setHive(updatedHive)
+                    hiveNavController.navigateUp()
+                }
+            )
+        }
 
+        composable<AddHiveScreenDestination> {
+            AddHiveScreen(
+                onBackClick = {
+                    hiveNavController.navigateUp()
+                },
+                onSaveClick = { hiveData ->
+                    currentHiveProvider.setHive(hiveData)
+                    hiveNavController.navigateUp()
+                }
+
+            )
         }
     }
 }
@@ -53,5 +93,13 @@ object ListHivesScreenDestination
 
 @Serializable
 data class EditHiveScreenDestination (
+    val hiveName: String
+)
+
+@Serializable
+object AddHiveScreenDestination
+
+@Serializable
+data class HiveDetailsScreenDestination(
     val hiveName: String
 )
