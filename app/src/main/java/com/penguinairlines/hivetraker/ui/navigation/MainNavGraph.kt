@@ -7,8 +7,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.penguinairlines.hivetraker.HomeScreen
 import com.penguinairlines.hivetraker.RecordingsScreen
-import com.penguinairlines.hivetraker.TasksScreen
 import com.penguinairlines.hivetraker.ui.hives.HivesNavHost
+import com.penguinairlines.hivetraker.ui.tasks.TasksNavHost
 
 @Composable
 fun MainNavGraph(
@@ -26,7 +26,7 @@ fun MainNavGraph(
                 when (destination) {
                     NavDestination.Home -> HomeScreen()
                     NavDestination.Hives -> HivesNavHost()
-                    NavDestination.Tasks -> TasksScreen()
+                    NavDestination.Tasks -> TasksNavHost()
                     NavDestination.Recordings -> RecordingsScreen()
                 }
             }
