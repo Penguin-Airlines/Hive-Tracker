@@ -1,6 +1,5 @@
 package com.penguinairlines.hivetraker.data.providers.test
 
-import android.location.Location
 import com.penguinairlines.hivetraker.data.models.Task
 import com.penguinairlines.hivetraker.data.models.User
 import com.penguinairlines.hivetraker.data.models.Yard
@@ -15,7 +14,6 @@ class TestTaskProvider: TaskProvider {
             "burtmiller@burtsbees.com"
         )
     )
-    private var location = Location("")
     private var tasks = mutableListOf(
         Task(
             "Task 1",

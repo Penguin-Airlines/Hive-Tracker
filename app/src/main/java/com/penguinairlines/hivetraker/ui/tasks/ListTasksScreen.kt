@@ -1,5 +1,6 @@
 package com.penguinairlines.hivetraker.ui.tasks
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -17,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -49,16 +52,16 @@ fun ListTasksScreen(taskProvider: TaskProvider) {
             contentPadding = contentPadding
         ) {
             // Sort tasks by due date
-            var tasks = taskProvider.getTasks().sortedBy { it.dueDate.time }
+            val tasks = taskProvider.getTasks().sortedBy { it.dueDate.time }
             // Group tasks by month
             tasks.groupBy { it.dueDate.get(Calendar.MONTH) }.forEach { (month, tasksInMonth) ->
                 // Display the month header
                 item {
-                    monthHeader(month)
+                    MonthHeader(month)
                 }
 
                 // Display day in the month
-                tasksInMonth.groupBy { it.dueDate.get(Calendar.DAY_OF_MONTH) }.forEach { (day, tasksOnDay) ->
+                tasksInMonth.groupBy { it.dueDate.get(Calendar.DAY_OF_MONTH) }.forEach { (_, tasksOnDay) ->
                     // Display the day header
                     item {
                         Row {
@@ -71,10 +74,12 @@ fun ListTasksScreen(taskProvider: TaskProvider) {
                             // Display the tasks for that day
                             Column {
                                 tasksOnDay.forEach { task ->
+                                    val context = LocalContext.current
                                     TaskListItem(
                                         task = task,
                                         onClick = {
                                             // Handle task click
+                                            Toast.makeText(context, it.name + " was clicked", Toast.LENGTH_SHORT).show()
                                         }
                                     )
                                 }
@@ -93,13 +98,14 @@ fun ListTasksScreen(taskProvider: TaskProvider) {
 @Composable
 fun TaskListItem(
     task: Task,
-    onClick: () -> Unit
+    onClick: (Task) -> Unit
 ) {
     Card (
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
-        //colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+        onClick = { onClick(task) }
     )
     {
         Column (
@@ -113,7 +119,7 @@ fun TaskListItem(
             )
             Text(
                 style = MaterialTheme.typography.bodyMedium,
-                text = task.description ?: "No description available",
+                text = task.description,
                 modifier = Modifier.padding(top = 4.dp)
             )
         }
@@ -158,7 +164,7 @@ fun DateCircle(date: Calendar, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun monthHeader(month: Int) {
+fun MonthHeader(month: Int) {
     // Get the month name from the Calendar instance
     val monthName = Calendar.getInstance().apply {
         set(Calendar.MONTH, month)
@@ -191,10 +197,4 @@ fun TaskListITemPreview() {
 
     )
     TaskListItem(testTask) { }
-}
-
-@Composable
-fun TaskList() {
-    // Placeholder for the task list content
-    Text(text = "Task List Content")
 }
