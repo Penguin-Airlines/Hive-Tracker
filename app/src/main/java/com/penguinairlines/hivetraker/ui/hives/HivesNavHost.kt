@@ -2,7 +2,6 @@ package com.penguinairlines.hivetraker.ui.hives
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -10,10 +9,11 @@ import androidx.navigation.toRoute
 import com.penguinairlines.hivetraker.data.models.Hive
 import com.penguinairlines.hivetraker.data.models.User
 import com.penguinairlines.hivetraker.data.models.Yard
+import com.penguinairlines.hivetraker.data.models.Log
 import com.penguinairlines.hivetraker.data.providers.ProviderFactory
 import com.penguinairlines.hivetraker.data.providers.test.TestProvider
 import kotlinx.serialization.Serializable
-
+import com.penguinairlines.hivetraker.ui.hives.logs.LogTemplate
 @Composable
 fun HivesNavHost() {
     val hiveNavController = rememberNavController();
@@ -49,6 +49,11 @@ fun HivesNavHost() {
             val args = it.toRoute<HiveDetailsScreenDestination>()
             val hive = currentHiveProvider.getHive(args.hiveName)
             HiveDetailScreen(
+                logOnClick = { log: Log ->
+                    hiveNavController.navigate(
+                        LogTemplateScreenDestination(log.logName,hive.name)
+                    )
+                },
                 hive,
                 onBackClick = {
                     hiveNavController.navigateUp()
@@ -85,6 +90,14 @@ fun HivesNavHost() {
 
             )
         }
+        composable<LogTemplateScreenDestination> {
+            val args = it.toRoute<LogTemplateScreenDestination>()
+            val hive = currentHiveProvider.getHive(args.hiveName)
+            val log = hive.getLog(args.logName)
+            LogTemplate(
+                log
+            )
+        }
     }
 }
 
@@ -102,4 +115,10 @@ object AddHiveScreenDestination
 @Serializable
 data class HiveDetailsScreenDestination(
     val hiveName: String
+)
+
+@Serializable
+data class LogTemplateScreenDestination(
+    val logName: String,
+    val hiveName : String
 )

@@ -7,10 +7,9 @@ data class Hive(
     var location: Location,
     var status: HiveStatus,
     var frameCount: UInt,
-    var description: String
-
+    var description: String,
+    var logList: MutableList<Log> = mutableListOf()
 ) {
-    val logList: MutableList<Log> = mutableListOf() // <--- Added list of logs need to implement way to display on hiveTemplate.kt
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -21,5 +20,15 @@ data class Hive(
 
     override fun hashCode(): Int {
         return super.hashCode()
+    }
+    fun addLog(newLog : Log): Boolean{
+        logList.add(newLog)
+        return true
+    }
+    fun getLog(logName : String): Log{
+        logList.forEach() { log -> if(logName.equals(log.logName))
+            return log
+        }
+        throw NoSuchElementException()
     }
 }

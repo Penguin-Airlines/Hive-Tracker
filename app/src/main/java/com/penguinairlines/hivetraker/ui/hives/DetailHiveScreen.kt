@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Edit
@@ -26,11 +27,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
+import com.penguinairlines.hivetraker.data.models.Log
+import com.penguinairlines.hivetraker.ui.hives.logs.LogListItem
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HiveDetailScreen(
+    logOnClick: (log: Log) -> Unit,
     hiveData: Hive,
     onEditClick: (hive: Hive) -> Unit = { /* Default edit action */ },
     onBackClick : () -> Unit = { /* Default back navigation handler */ },
@@ -122,7 +126,7 @@ fun HiveDetailScreen(
                 modifier = Modifier.padding(top = 12.dp, bottom = 4.dp)
             )
             Text(
-                text = hiveData.location.toString() ?: "Unknown",
+                text = hiveData.location.toString(),
                 style = MaterialTheme.typography.bodyMedium
             )
             HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp))
@@ -154,6 +158,25 @@ fun HiveDetailScreen(
                 style = MaterialTheme.typography.bodyMedium
             )
         }
+        item{
+            Text(
+            style = MaterialTheme.typography.displayMedium,
+            text = "Hives"
+        )
+            HorizontalDivider()
+            LazyColumn(
+                modifier = Modifier.statusBarsPadding()
+            ) {
+                items(hiveData.logList) { log ->
+                    LogListItem(log,
+                        onclick = {
+                            logOnClick(log)
+                        }
+                    )
+                }
+            }
+        }
+
     }}
 
 }
@@ -176,8 +199,8 @@ fun PreviewHiveTemplate() {
         location = location,
         status = HiveStatus.CRITICAL,
         frameCount = 5u,
-        description = "A beautiful hive with very active bees.",
+        description = "A beautiful hive with very active bees."
     )
+    mockHive.addLog(Log("log1",mockHive.name))
 
-    HiveDetailScreen(hiveData = mockHive)
 }

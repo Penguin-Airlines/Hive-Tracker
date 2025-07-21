@@ -12,7 +12,7 @@ import com.penguinairlines.hivetraker.data.models.Log
 
 
 @Composable
-fun LogListItem(log: Log, modifier: Modifier = Modifier,onClick: () -> Unit) {
+fun LogListItem(log: Log, modifier: Modifier = Modifier,onclick: () -> Unit) {
     val dateFormat = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
 
     Card(
@@ -20,7 +20,8 @@ fun LogListItem(log: Log, modifier: Modifier = Modifier,onClick: () -> Unit) {
             .fillMaxWidth()
             .padding(vertical = 4.dp),
         shape = MaterialTheme.shapes.medium,
-        colors = CardDefaults.cardColors()
+        colors = CardDefaults.cardColors(),
+        onClick=onclick
     ) {
         Column(modifier = Modifier.padding(12.dp)) {
             // Top Section: Title + Date
