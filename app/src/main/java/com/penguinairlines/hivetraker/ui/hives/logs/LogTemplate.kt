@@ -3,6 +3,8 @@ package com.penguinairlines.hivetraker.ui.hives.logs
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -24,7 +26,7 @@ fun Boolean.toYesNo(): String = if (this) "Yes" else "No"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LogTemplate(log: Log, navController: NavHostController) {
+fun LogTemplate(log: Log, onLogBackClick: () -> Unit = {}) {
     val scrollState = rememberScrollState()
     val dateFormatter = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
 
@@ -33,9 +35,9 @@ fun LogTemplate(log: Log, navController: NavHostController) {
             TopAppBar(
                 title = { Text("Log Details") },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = onLogBackClick) {
                         Icon(
-                            imageVector = Icons.Default.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
                             contentDescription = "Back"
                         )
                     }
