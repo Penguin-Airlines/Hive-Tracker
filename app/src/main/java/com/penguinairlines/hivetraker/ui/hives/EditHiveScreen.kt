@@ -21,11 +21,8 @@ fun EditHiveScreen(
 ) {
     Text("Editing Hive: " + hive.name,
         modifier = Modifier.fillMaxSize().statusBarsPadding().padding(8.dp))
+    
 
-    Button(onClick = {
-        hive.description = "Updated description"
-        saveHive(hive)
-    }) { }
 
 }
 
