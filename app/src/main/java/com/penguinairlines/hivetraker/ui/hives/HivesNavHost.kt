@@ -20,7 +20,7 @@ fun HivesNavHost() {
     val currentProviderFactory: ProviderFactory = remember { TestProvider() }
     val currentUser = remember{User("", "")}
     val currentYard = remember{Yard("", currentUser)}
-    val currentHiveProvider = remember { currentProviderFactory.getHiveProvider(currentYard, "") }
+    val currentHiveProvider = remember { currentProviderFactory.getHiveProvider(currentYard) }
 
     NavHost(
         hiveNavController, startDestination = ListHivesScreenDestination
