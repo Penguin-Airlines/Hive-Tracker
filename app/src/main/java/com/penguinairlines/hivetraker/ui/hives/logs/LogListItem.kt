@@ -32,7 +32,7 @@ fun LogListItem(log: Log, modifier: Modifier = Modifier,onclick: () -> Unit) {
             )
 
             Text(
-                text = "Date: ${dateFormat.format(log.date)}",
+                text = "Date: ${log.date?.let { dateFormat.format(it) } ?: "N/A"}",
                 style = MaterialTheme.typography.labelSmall,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
