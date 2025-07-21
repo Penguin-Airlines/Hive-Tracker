@@ -23,15 +23,16 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import com.penguinairlines.hivetraker.data.models.Log
+import com.penguinairlines.hivetraker.ui.hives.logs.LogListItem
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HiveDetailScreen(
-    logOnClick: (log: Log) -> Unit = {},
     hiveData: Hive,
     onEditClick: (hive: Hive) -> Unit = { /* Default edit action */ },
     onBackClick : () -> Unit = { /* Default back navigation handler */ },
+    logOnClick: (Log) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Scaffold (
@@ -120,7 +121,7 @@ fun HiveDetailScreen(
                 modifier = Modifier.padding(top = 12.dp, bottom = 4.dp)
             )
             Text(
-                text = hiveData.location.toString(),
+                text = hiveData.location.toString()?: "Unknown",
                 style = MaterialTheme.typography.bodyMedium
             )
             HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp))
@@ -155,18 +156,28 @@ fun HiveDetailScreen(
         item{
             Text(
             style = MaterialTheme.typography.displayMedium,
-            text = "Hives"
+            text = "Logs"
         )
             HorizontalDivider()
             LazyColumn(
                 modifier = Modifier.statusBarsPadding()
             ) {
-                items(hiveData.logList) { log ->
-                    LogListItem(log,
-                        onclick = {
-                            logOnClick(log)
-                        }
-                    )
+                if(hiveData.logList.isNullOrEmpty()) {
+                    item{
+                        Text(
+                            text="No Logs Yet"
+                        )
+                    }
+                }
+                else {
+                    items(hiveData.logList) { log ->
+                        LogListItem(
+                            log,
+                            onclick = {
+                                logOnClick(log)
+                            }
+                        )
+                    }
                 }
             }
         }

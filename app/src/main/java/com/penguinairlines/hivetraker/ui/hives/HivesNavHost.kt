@@ -9,10 +9,10 @@ import androidx.navigation.toRoute
 import com.penguinairlines.hivetraker.data.models.Hive
 import com.penguinairlines.hivetraker.data.models.User
 import com.penguinairlines.hivetraker.data.models.Yard
-import com.penguinairlines.hivetraker.data.models.Log
 import com.penguinairlines.hivetraker.data.providers.ProviderFactory
 import com.penguinairlines.hivetraker.data.providers.test.TestProvider
 import kotlinx.serialization.Serializable
+import com.penguinairlines.hivetraker.ui.hives.logs.LogTemplate
 
 @Composable
 fun HivesNavHost() {
@@ -48,19 +48,16 @@ fun HivesNavHost() {
         composable<HivesDestination.Details> {
             val args = it.toRoute<HivesDestination.Details>()
             val hive = currentHiveProvider.getHive(args.hiveName)
+
             HiveDetailScreen(
-                logOnClick = { log: Log ->
-                    hiveNavController.navigate(
-                        HivesDestination.Log(log.logName,hive.name)
-                    )
-                },
-                hive,
-                onBackClick = {
-                    hiveNavController.navigateUp()
-                },
+                hiveData = hive,
+                onBackClick = { hiveNavController.navigateUp() },
                 onEditClick = {
+                    hiveNavController.navigate(HivesDestination.Edit(hive.name))
+                },
+                logOnClick = { log ->
                     hiveNavController.navigate(
-                        HivesDestination.Edit(hive.name)
+                        HivesDestination.LogTemplate(logName = log.logName, hiveName = hive.name)
                     )
                 }
             )
@@ -90,13 +87,13 @@ fun HivesNavHost() {
 
             )
         }
-        composable<HivesDestination.Log> {
-            val args = it.toRoute<HivesDestination.Log>()
+        composable<HivesDestination.LogTemplate> {
+            val args = it.toRoute<HivesDestination.LogTemplate>()
             val hive = currentHiveProvider.getHive(args.hiveName)
             val log = hive.getLog(args.logName)
-            LogTemplate(
-                log
-            )
+
+
+            LogTemplate(log = log)
         }
     }
 }
@@ -115,29 +112,8 @@ sealed class HivesDestination() {
     @Serializable
     object Add: HivesDestination()
     @Serializable
-    data class Log(
+    data class LogTemplate(
         val logName: String,
-        val hiveName : String
-    ):HivesDestination()
+        val hiveName: String
+    ) : HivesDestination()
 }
-@Serializable
-object ListHivesScreenDestination
-
-@Serializable
-data class EditHiveScreenDestination (
-    val hiveName: String
-)
-
-@Serializable
-object AddHiveScreenDestination
-
-@Serializable
-data class HiveDetailsScreenDestination(
-    val hiveName: String
-)
-
-@Serializable
-data class LogTemplateScreenDestination(
-    val logName: String,
-    val hiveName : String
-)
