@@ -12,14 +12,14 @@ import androidx.compose.material.icons.outlined.Task
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.penguinairlines.hivetraker.R
 
-sealed class NavDestination(
+sealed class MainNavItems(
     val route: MainDestination,
     val label: String,
     val icon: ImageVector,
     val iconSelected: ImageVector,
     val contentDescription: Int
 ) {
-    data object Home : NavDestination(
+    data object Home : MainNavItems(
         route = MainDestination.Home,
         label = "Home",
         icon = Icons.Outlined.Home,
@@ -27,7 +27,7 @@ sealed class NavDestination(
         contentDescription = R.string.home_page_content_description
     )
 
-    data object Hives : NavDestination(
+    data object Hives : MainNavItems(
         route = MainDestination.Hives,
         label = "Hives",
         icon = Icons.Outlined.Hive,
@@ -35,7 +35,7 @@ sealed class NavDestination(
         contentDescription = R.string.hives_page_content_description
     )
 
-    data object Tasks : NavDestination(
+    data object Tasks : MainNavItems(
         route = MainDestination.Tasks,
         label = "Tasks",
         icon = Icons.Outlined.Task,
@@ -43,7 +43,7 @@ sealed class NavDestination(
         contentDescription = R.string.tasks_page_content_description
     )
 
-    data object Recordings : NavDestination(
+    data object Recordings : MainNavItems(
         route = MainDestination.Recordings,
         label = "Recordings",
         icon = Icons.Outlined.KeyboardVoice,
@@ -52,7 +52,7 @@ sealed class NavDestination(
     )
 
     companion object {
-        fun values(): Array<NavDestination> {
+        fun values(): Array<MainNavItems> {
             return arrayOf(Home, Hives, Tasks, Recordings)
         }
     }

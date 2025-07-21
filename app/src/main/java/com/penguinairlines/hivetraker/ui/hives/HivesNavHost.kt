@@ -23,18 +23,18 @@ fun HivesNavHost() {
     val currentHiveProvider = remember { currentProviderFactory.getHiveProvider(currentYard) }
 
     NavHost(
-        hiveNavController, startDestination = ListHivesScreenDestination
+        hiveNavController, startDestination = HivesDestination.List
     ) {
-        composable<ListHivesScreenDestination> {
+        composable<HivesDestination.List> {
             ListHivesScreen(
                 hiveOnClick = { hive: Hive ->
                     hiveNavController.navigate(
-                        HiveDetailsScreenDestination(hive.name)
+                        HivesDestination.Details(hive.name)
                     )
                 },
                 addHiveOnClick = {
                     hiveNavController.navigate(
-                        AddHiveScreenDestination
+                        HivesDestination.Add
                     )
                 },
                 currentHiveProvider,
@@ -44,8 +44,8 @@ fun HivesNavHost() {
 
         }
 
-        composable<HiveDetailsScreenDestination> {
-            val args = it.toRoute<HiveDetailsScreenDestination>()
+        composable<HivesDestination.Details> {
+            val args = it.toRoute<HivesDestination.Details>()
             val hive = currentHiveProvider.getHive(args.hiveName)
             HiveDetailScreen(
                 hive,
@@ -54,14 +54,14 @@ fun HivesNavHost() {
                 },
                 onEditClick = {
                     hiveNavController.navigate(
-                        EditHiveScreenDestination(hive.name)
+                        HivesDestination.Edit(hive.name)
                     )
                 }
             )
         }
 
-        composable<EditHiveScreenDestination> {
-            val args = it.toRoute<EditHiveScreenDestination>()
+        composable<HivesDestination.Edit> {
+            val args = it.toRoute<HivesDestination.Edit>()
             val hive = currentHiveProvider.getHive(args.hiveName)
             EditHiveScreen(
                 hive,
@@ -72,7 +72,7 @@ fun HivesNavHost() {
             )
         }
 
-        composable<AddHiveScreenDestination> {
+        composable<HivesDestination.Add> {
             AddHiveScreen(
                 onBackClick = {
                     hiveNavController.navigateUp()
@@ -87,18 +87,17 @@ fun HivesNavHost() {
     }
 }
 
-@Serializable
-object ListHivesScreenDestination
-
-@Serializable
-data class EditHiveScreenDestination (
-    val hiveName: String
-)
-
-@Serializable
-object AddHiveScreenDestination
-
-@Serializable
-data class HiveDetailsScreenDestination(
-    val hiveName: String
-)
+sealed class HivesDestination() {
+    @Serializable
+    object List: HivesDestination()
+    @Serializable
+    data class Details(
+        val hiveName: String
+    ): HivesDestination()
+    @Serializable
+    data class Edit(
+        val hiveName: String
+    ): HivesDestination()
+    @Serializable
+    object Add: HivesDestination()
+}

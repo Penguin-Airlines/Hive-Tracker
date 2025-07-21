@@ -14,7 +14,6 @@ import kotlinx.serialization.Serializable
 @Composable
 fun MainNavHost(
     navController: NavHostController,
-    startDestination: NavDestination,
     modifier: Modifier = Modifier
 ) {
     NavHost(

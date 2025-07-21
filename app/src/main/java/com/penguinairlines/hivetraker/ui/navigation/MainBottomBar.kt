@@ -16,7 +16,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 @Composable
 fun MainBottomBar(
     navController: NavHostController,
-    onDestinationSelected: (Int) -> Unit
 ) {
     NavigationBar(
         windowInsets = NavigationBarDefaults.windowInsets,
@@ -26,7 +25,7 @@ fun MainBottomBar(
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
 
-        NavDestination.values().forEach { destination ->
+        MainNavItems.values().forEach { destination ->
             val destinationRouteName = destination.route::class.qualifiedName
             val selected: Boolean = currentRoute == destinationRouteName
             val icon = if (selected) destination.iconSelected else destination.icon

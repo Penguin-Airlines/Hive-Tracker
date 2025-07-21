@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.penguinairlines.hivetraker.ui.navigation.MainBottomBar
 import com.penguinairlines.hivetraker.ui.navigation.MainNavHost
-import com.penguinairlines.hivetraker.ui.navigation.NavDestination
 import com.penguinairlines.hivetraker.ui.theme.HiveTrakerTheme
 
 
@@ -27,22 +26,17 @@ class MainActivity : ComponentActivity() {
         setContent {
             HiveTrakerTheme {
                 val navController = rememberNavController()
-                val startDestination = NavDestination.Home
 
                 Scaffold(
                     modifier = Modifier,
                     bottomBar = {
                         MainBottomBar(
                             navController = navController,
-                            onDestinationSelected = { index ->
-
-                            }
-
                         )
                     }
 
                 ) { contentPadding ->
-                    MainNavHost(navController, startDestination, modifier = Modifier.padding(contentPadding))
+                    MainNavHost(navController,  modifier = Modifier.padding(contentPadding))
                 }
             }
         }
@@ -52,27 +46,19 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier) {
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         Text("Home")
     }
 }
 
-@Composable
-fun TasksScreen(modifier: Modifier = Modifier) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text("Tasks")
-    }
-}
+
 
 @Composable
 fun RecordingsScreen(modifier: Modifier = Modifier) {
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         Text("Recordings")
