@@ -82,10 +82,10 @@ fun ListTaskScreen(
                 .sortedBy { it.dueDate.time }
             // Group tasks by month
             tasks.groupBy { Pair(it.dueDate.get(Calendar.YEAR), it.dueDate.get(Calendar.MONTH)) }.forEach { (monthYear, tasksInMonth) ->
-                val (_, month) = monthYear
+                val (year, month) = monthYear
                 // Display the month header
                 item {
-                    MonthHeader(month)
+                    MonthHeader(month, year)
                 }
 
                 // Display day in the month
@@ -192,11 +192,16 @@ fun DateCircle(date: Calendar, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun MonthHeader(month: Int) {
+fun MonthHeader(month: Int, year: Int) {
     // Get the month name from the Calendar instance
-    val monthName = Calendar.getInstance().apply {
+    var monthName = Calendar.getInstance().apply {
         set(Calendar.MONTH, month)
     }.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()) ?: ""
+
+    if (year != Calendar.getInstance().get(Calendar.YEAR)) {
+        // If the year is not the current year, append it to the month name
+        monthName = "$monthName $year"
+    }
 
     Text(
         text = monthName,
