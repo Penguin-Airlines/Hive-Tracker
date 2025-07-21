@@ -12,6 +12,7 @@ import com.penguinairlines.hivetraker.data.models.Yard
 import com.penguinairlines.hivetraker.data.providers.ProviderFactory
 import com.penguinairlines.hivetraker.data.providers.test.TestProvider
 import kotlinx.serialization.Serializable
+import com.penguinairlines.hivetraker.ui.hives.logs.LogTemplate
 
 @Composable
 fun HivesNavHost() {
@@ -47,14 +48,16 @@ fun HivesNavHost() {
         composable<HivesDestination.Details> {
             val args = it.toRoute<HivesDestination.Details>()
             val hive = currentHiveProvider.getHive(args.hiveName)
+
             HiveDetailScreen(
-                hive,
-                onBackClick = {
-                    hiveNavController.navigateUp()
-                },
+                hiveData = hive,
+                onBackClick = { hiveNavController.navigateUp() },
                 onEditClick = {
+                    hiveNavController.navigate(HivesDestination.Edit(hive.name))
+                },
+                logOnClick = { log ->
                     hiveNavController.navigate(
-                        HivesDestination.Edit(hive.name)
+                        HivesDestination.LogTemplate(logName = log.logName, hiveName = hive.name)
                     )
                 }
             )
@@ -84,6 +87,14 @@ fun HivesNavHost() {
 
             )
         }
+        composable<HivesDestination.LogTemplate> {
+            val args = it.toRoute<HivesDestination.LogTemplate>()
+            val hive = currentHiveProvider.getHive(args.hiveName)
+            val log = hive.getLog(args.logName)
+
+
+            LogTemplate(log = log)
+        }
     }
 }
 
@@ -100,4 +111,9 @@ sealed class HivesDestination() {
     ): HivesDestination()
     @Serializable
     object Add: HivesDestination()
+    @Serializable
+    data class LogTemplate(
+        val logName: String,
+        val hiveName: String
+    ) : HivesDestination()
 }
