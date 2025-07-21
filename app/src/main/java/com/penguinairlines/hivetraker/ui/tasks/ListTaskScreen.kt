@@ -10,9 +10,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -32,12 +36,32 @@ import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListTasksScreen(taskProvider: TaskProvider) {
+fun ListTaskScreen(
+    taskProvider: TaskProvider,
+    onAddTaskClick: () -> Unit,
+) {
     Scaffold (
         topBar = {
             androidx.compose.material3.CenterAlignedTopAppBar(
                 title = {
                     Text(text = "All Tasks")
+                }
+            )
+        },
+        floatingActionButton = {
+            ExtendedFloatingActionButton(
+                onClick = onAddTaskClick,
+                icon = {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "Add Task",
+                    )
+                },
+                text = {
+                    Text(
+                        text = "Add Task",
+                        style = MaterialTheme.typography.bodyLarge
+                    )
                 }
             )
         },
@@ -51,8 +75,11 @@ fun ListTasksScreen(taskProvider: TaskProvider) {
             // Use the content padding to avoid overlapping with the top bar
             contentPadding = contentPadding
         ) {
-            // Sort tasks by due date
-            val tasks = taskProvider.getTasks().sortedBy { it.dueDate.time }
+            // Sort tasks by due date and filter out past due tasks
+            val now = Calendar.getInstance()
+            val tasks = taskProvider.getTasks()
+                .filter { it.dueDate.after(now) || isSameDay(it.dueDate, now) }
+                .sortedBy { it.dueDate.time }
             // Group tasks by month
             tasks.groupBy { it.dueDate.get(Calendar.MONTH) }.forEach { (month, tasksInMonth) ->
                 // Display the month header
@@ -178,6 +205,14 @@ fun MonthHeader(month: Int) {
         style = MaterialTheme.typography.headlineMedium,
         color = MaterialTheme.colorScheme.onBackground
     )
+}
+
+/**
+ * Returns true if the two calendars represent the same day (year, month, day).
+ */
+fun isSameDay(cal1: Calendar, cal2: Calendar): Boolean {
+    return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+            cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)
 }
 
 @Preview
