@@ -1,6 +1,7 @@
 package com.penguinairlines.hivetraker.ui.hives.logs
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -13,6 +14,7 @@ import androidx.navigation.NavHostController
 import com.penguinairlines.hivetraker.data.models.Log
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 @Composable
 fun LogEntry(label: String, value: String?) {
@@ -45,43 +47,42 @@ fun LogTemplate(log: Log, onLogBackClick: () -> Unit = {}) {
             )
         }
     ) { innerPadding ->
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(16.dp)
-                .verticalScroll(scrollState),
+                .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            LogEntry("Log Name", log.logName)
-            LogEntry("Hive Name", log.hiveName)
-            LogEntry("Date", dateFormatter.format(log.date))
-            LogEntry("Notes", log.notes)
-            LogEntry("Temper", log.temper)
-            LogEntry("Hive Condition", log.hiveCondition)
-            LogEntry("Number of Frames", log.numFrames?.toString())
-            LogEntry("Bee Frames Present", log.beeFramesBool?.toYesNo())
-            LogEntry("Bee Frame Count", log.numBeeFrames?.toString())
-            LogEntry("Honey Frames in Body", log.honeyFramesBoolBody?.toYesNo())
-            LogEntry("Honey Frame Count (Body)", log.numHoneyFramesBody?.toString())
-            LogEntry("Honey Frames in Top", log.honeyFramesBoolTop?.toYesNo())
-            LogEntry("Honey Frame Count (Top)", log.numHoneyFramesTop?.toString())
-            LogEntry("Brood (Eggs)", log.broodEgg?.toYesNo())
-            LogEntry("Brood (Larvae)", log.broodLarvae?.toYesNo())
-            LogEntry("Capped Brood", log.cappedBrood?.toYesNo())
-            LogEntry("Laying Pattern", log.layingPatter)
-            LogEntry("Queen Seen", log.queenSeen?.toYesNo())
-            LogEntry("Queen Notes", log.queenNotes)
-            LogEntry("Queen Cells", log.queenCells?.toYesNo())
-            LogEntry("Queen Cells Notes", log.queenCellsNotes)
-            LogEntry("No Queen", log.noQueen?.toYesNo())
-            LogEntry("Drone Cells", log.droneCells?.toYesNo())
-            LogEntry("Drones Present", log.dronesBool?.toYesNo())
-            LogEntry("Drones Notes", log.dronesNotes)
-            LogEntry("Disease", log.disease)
-            LogEntry("Pest", log.pest)
-            LogEntry("Disease & Pest Notes", log.diseasePestNotes)
-            LogEntry("Weather", log.weather)
+            item { LogEntry("Log Name", log.logName) }
+            item { LogEntry("Hive Name", log.hiveName) }
+            item { LogEntry("Date", dateFormatter.format(log.date)) }
+            item { LogEntry("Notes", log.notes) }
+            item { LogEntry("Temper", log.temper) }
+            item { LogEntry("Hive Condition", log.hiveCondition) }
+            item { LogEntry("Number of Frames", log.numFrames?.toString()) }
+            item { LogEntry("Bee Frames Present", log.beeFramesBool?.toYesNo()) }
+            item { LogEntry("Bee Frame Count", log.numBeeFrames?.toString()) }
+            item { LogEntry("Honey Frames in Body", log.honeyFramesBoolBody?.toYesNo()) }
+            item { LogEntry("Honey Frame Count (Body)", log.numHoneyFramesBody?.toString()) }
+            item { LogEntry("Honey Frames in Top", log.honeyFramesBoolTop?.toYesNo()) }
+            item { LogEntry("Honey Frame Count (Top)", log.numHoneyFramesTop?.toString()) }
+            item { LogEntry("Brood (Eggs)", log.broodEgg?.toYesNo()) }
+            item { LogEntry("Brood (Larvae)", log.broodLarvae?.toYesNo()) }
+            item { LogEntry("Capped Brood", log.cappedBrood?.toYesNo()) }
+            item { LogEntry("Laying Pattern", log.layingPatter) }
+            item { LogEntry("Queen Seen", log.queenSeen?.toYesNo()) }
+            item { LogEntry("Queen Notes", log.queenNotes) }
+            item { LogEntry("Queen Cells", log.queenCells?.toYesNo()) }
+            item { LogEntry("Queen Cells Notes", log.queenCellsNotes) }
+            item { LogEntry("No Queen", log.noQueen?.toYesNo()) }
+            item { LogEntry("Drone Cells", log.droneCells?.toYesNo()) }
+            item { LogEntry("Drones Present", log.dronesBool?.toYesNo()) }
+            item { LogEntry("Drones Notes", log.dronesNotes) }
+            item { LogEntry("Disease", log.disease) }
+            item { LogEntry("Pest", log.pest) }
+            item { LogEntry("Disease & Pest Notes", log.diseasePestNotes) }
+            item { LogEntry("Weather", log.weather) }
         }
     }
 }
