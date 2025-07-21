@@ -2,6 +2,7 @@ package com.penguinairlines.hivetraker.ui.tasks
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -16,18 +17,38 @@ fun TasksNavHost() {
     val taskNavController = rememberNavController()
 
     val currentProviderFactory: ProviderFactory = remember { TestProvider() }
-    val currentUser = remember{User("", "")}
-    val currentYard = remember{Yard("", currentUser)}
-    val currentTaskProvider = remember { currentProviderFactory.getTaskProvider(currentYard)}
+    val currentUser = remember { User("", "") }
+    val currentYard = remember { Yard("", currentUser) }
+    val currentTaskProvider = remember { currentProviderFactory.getTaskProvider(currentYard) }
 
     NavHost(
-        taskNavController, startDestination = ListTasksScreenDestination
+        taskNavController, startDestination = TasksDestination.List
     ) {
-        composable<ListTasksScreenDestination> {
-            ListTasksScreen(currentTaskProvider)
+        composable<TasksDestination.List> {
+            ListTaskScreen(
+                taskProvider = currentTaskProvider,
+                onAddTaskClick = {
+                    taskNavController.navigate(TasksDestination.Add)
+                },
+            )
+        }
+        composable<TasksDestination.Add> {
+            AddTaskScreen(
+                onBack = { taskNavController.navigateUp() },
+                onSave = { task ->
+                    currentTaskProvider.setTask(task)
+                    taskNavController.navigateUp()
+                },
+                currentYard = currentYard,
+                modifier = Modifier
+            )
         }
     }
 }
 
-@Serializable
-object ListTasksScreenDestination
+sealed class TasksDestination {
+    @Serializable
+    object List : TasksDestination()
+    @Serializable
+    object Add : TasksDestination()
+}
