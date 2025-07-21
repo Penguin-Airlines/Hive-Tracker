@@ -9,6 +9,7 @@ import com.penguinairlines.hivetraker.HomeScreen
 import com.penguinairlines.hivetraker.RecordingsScreen
 import com.penguinairlines.hivetraker.ui.hives.HivesNavHost
 import com.penguinairlines.hivetraker.ui.tasks.TasksNavHost
+import kotlinx.serialization.Serializable
 
 @Composable
 fun MainNavHost(
@@ -18,18 +19,34 @@ fun MainNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = startDestination.route,
+        startDestination = MainDestination.Home,
         modifier = modifier
     ) {
-        NavDestination.entries.forEach { destination ->
-            composable(destination.route) {
-                when (destination) {
-                    NavDestination.Home -> HomeScreen()
-                    NavDestination.Hives -> HivesNavHost()
-                    NavDestination.Tasks -> TasksNavHost()
-                    NavDestination.Recordings -> RecordingsScreen()
-                }
-            }
+        composable<MainDestination.Home> {
+            HomeScreen()
+        }
+        composable<MainDestination.Hives> {
+            HivesNavHost()
+        }
+        composable<MainDestination.Tasks> {
+            TasksNavHost()
+        }
+        composable< MainDestination.Recordings> {
+            RecordingsScreen()
         }
     }
+}
+
+sealed class MainDestination() {
+    @Serializable
+    object Home : MainDestination()
+
+    @Serializable
+    object Hives : MainDestination()
+
+    @Serializable
+    object Tasks : MainDestination()
+
+    @Serializable
+    object Recordings : MainDestination()
 }
