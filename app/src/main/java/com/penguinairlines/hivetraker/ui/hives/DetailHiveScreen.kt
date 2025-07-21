@@ -1,6 +1,5 @@
 package com.penguinairlines.hivetraker.ui.hives
 
-import android.graphics.Color
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -10,12 +9,10 @@ import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.penguinairlines.hivetraker.data.models.Hive
 import com.penguinairlines.hivetraker.data.models.Log
 import com.penguinairlines.hivetraker.ui.hives.logs.LogListItem
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,7 +64,8 @@ fun HiveDetailScreen(
                 Card(
                     shape = MaterialTheme.shapes.medium,
                     colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.errorContainer                    ),
+                        containerColor = MaterialTheme.colorScheme.errorContainer
+                    ),
                     modifier = Modifier.padding(bottom = 12.dp)
                 ) {
                     Text(

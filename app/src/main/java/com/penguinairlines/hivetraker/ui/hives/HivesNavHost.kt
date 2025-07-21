@@ -93,8 +93,9 @@ fun HivesNavHost() {
             val log = hive.getLog(args.logName)
 
 
-            LogTemplate(log = log)
+            LogTemplate(log = log, navController = logNavController)
         }
+
     }
 }
 
