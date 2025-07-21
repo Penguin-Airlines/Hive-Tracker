@@ -81,7 +81,8 @@ fun ListTaskScreen(
                 .filter { it.dueDate.after(now) || isSameDay(it.dueDate, now) }
                 .sortedBy { it.dueDate.time }
             // Group tasks by month
-            tasks.groupBy { it.dueDate.get(Calendar.MONTH) }.forEach { (month, tasksInMonth) ->
+            tasks.groupBy { Pair(it.dueDate.get(Calendar.YEAR), it.dueDate.get(Calendar.MONTH)) }.forEach { (monthYear, tasksInMonth) ->
+                val (_, month) = monthYear
                 // Display the month header
                 item {
                     MonthHeader(month)
