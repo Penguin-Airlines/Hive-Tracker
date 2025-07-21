@@ -1,6 +1,5 @@
-package com.penguinairlines.hivetraker.ui
+package com.penguinairlines.hivetraker.ui.navigation
 
-import android.util.Log
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -12,12 +11,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.penguinairlines.hivetraker.ui.navigation.NavDestination
+
 
 @Composable
 fun MainBottomBar(
     navController: NavHostController,
-    onDestinationSelected: (Int) -> Unit
 ) {
     NavigationBar(
         windowInsets = NavigationBarDefaults.windowInsets,
@@ -27,17 +25,20 @@ fun MainBottomBar(
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
 
-        NavDestination.entries.forEach { destination ->
-            val selected: Boolean = currentRoute == destination.route
+        MainNavItems.values().forEach { destination ->
+            val destinationRouteName = destination.route::class.qualifiedName
+            val selected: Boolean = currentRoute == destinationRouteName
             val icon = if (selected) destination.iconSelected else destination.icon
 
             NavigationBarItem(
                 selected = selected,
                 onClick = {
-                    navController.navigate(route = destination.route)
+                    if (!selected) {
+                        navController.navigate(destination.route)
+                    }
                 },
                 icon = {
-                    Icon (
+                    Icon(
                         icon,
                         contentDescription = stringResource(destination.contentDescription)
                     )

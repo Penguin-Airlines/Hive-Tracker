@@ -1,6 +1,5 @@
 package com.penguinairlines.hivetraker.ui.hives
 
-import android.location.Location
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -16,10 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.penguinairlines.hivetraker.data.models.Hive
-import com.penguinairlines.hivetraker.data.models.HiveStatus
-import com.penguinairlines.hivetraker.data.models.User
-import com.penguinairlines.hivetraker.data.models.Yard
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,13 +23,12 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import com.penguinairlines.hivetraker.data.models.Log
-import com.penguinairlines.hivetraker.ui.hives.logs.LogListItem
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HiveDetailScreen(
-    logOnClick: (log: Log) -> Unit,
+    logOnClick: (log: Log) -> Unit = {},
     hiveData: Hive,
     onEditClick: (hive: Hive) -> Unit = { /* Default edit action */ },
     onBackClick : () -> Unit = { /* Default back navigation handler */ },
@@ -178,29 +172,5 @@ fun HiveDetailScreen(
         }
 
     }}
-
-}
-@Preview(showBackground = true)
-@Composable
-fun PreviewHiveTemplate() {
-
-    val mockYard = Yard(
-        "Yard 1",
-        User(
-            "Burt Miller",
-            "burtmiller@burtsbees.com"
-        )
-    )
-    val location = Location("")
-
-    val mockHive = Hive(
-        name = "Hive 1",
-        yard = mockYard,
-        location = location,
-        status = HiveStatus.CRITICAL,
-        frameCount = 5u,
-        description = "A beautiful hive with very active bees."
-    )
-    mockHive.addLog(Log("log1",mockHive.name))
 
 }

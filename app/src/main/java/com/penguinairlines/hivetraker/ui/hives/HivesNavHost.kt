@@ -13,29 +13,29 @@ import com.penguinairlines.hivetraker.data.models.Log
 import com.penguinairlines.hivetraker.data.providers.ProviderFactory
 import com.penguinairlines.hivetraker.data.providers.test.TestProvider
 import kotlinx.serialization.Serializable
-import com.penguinairlines.hivetraker.ui.hives.logs.LogTemplate
+
 @Composable
 fun HivesNavHost() {
-    val hiveNavController = rememberNavController();
+    val hiveNavController = rememberNavController()
 
     val currentProviderFactory: ProviderFactory = remember { TestProvider() }
-    val currentUser = remember{User("", "")};
-    val currentYard = remember{Yard("", currentUser)};
-    val currentHiveProvider = remember { currentProviderFactory.getHiveProvider(currentYard, "") }
+    val currentUser = remember{User("", "")}
+    val currentYard = remember{Yard("", currentUser)}
+    val currentHiveProvider = remember { currentProviderFactory.getHiveProvider(currentYard) }
 
     NavHost(
-        hiveNavController, startDestination = ListHivesScreenDestination
+        hiveNavController, startDestination = HivesDestination.List
     ) {
-        composable<ListHivesScreenDestination> {
+        composable<HivesDestination.List> {
             ListHivesScreen(
                 hiveOnClick = { hive: Hive ->
                     hiveNavController.navigate(
-                        HiveDetailsScreenDestination(hive.name)
+                        HivesDestination.Details(hive.name)
                     )
                 },
                 addHiveOnClick = {
                     hiveNavController.navigate(
-                        AddHiveScreenDestination
+                        HivesDestination.Add
                     )
                 },
                 currentHiveProvider,
@@ -45,13 +45,13 @@ fun HivesNavHost() {
 
         }
 
-        composable<HiveDetailsScreenDestination> {
-            val args = it.toRoute<HiveDetailsScreenDestination>()
+        composable<HivesDestination.Details> {
+            val args = it.toRoute<HivesDestination.Details>()
             val hive = currentHiveProvider.getHive(args.hiveName)
             HiveDetailScreen(
                 logOnClick = { log: Log ->
                     hiveNavController.navigate(
-                        LogTemplateScreenDestination(log.logName,hive.name)
+                        HivesDestination.Log(log.logName,hive.name)
                     )
                 },
                 hive,
@@ -60,14 +60,14 @@ fun HivesNavHost() {
                 },
                 onEditClick = {
                     hiveNavController.navigate(
-                        EditHiveScreenDestination(hive.name)
+                        HivesDestination.Edit(hive.name)
                     )
                 }
             )
         }
 
-        composable<EditHiveScreenDestination> {
-            val args = it.toRoute<EditHiveScreenDestination>()
+        composable<HivesDestination.Edit> {
+            val args = it.toRoute<HivesDestination.Edit>()
             val hive = currentHiveProvider.getHive(args.hiveName)
             EditHiveScreen(
                 hive,
@@ -78,7 +78,7 @@ fun HivesNavHost() {
             )
         }
 
-        composable<AddHiveScreenDestination> {
+        composable<HivesDestination.Add> {
             AddHiveScreen(
                 onBackClick = {
                     hiveNavController.navigateUp()
@@ -90,8 +90,8 @@ fun HivesNavHost() {
 
             )
         }
-        composable<LogTemplateScreenDestination> {
-            val args = it.toRoute<LogTemplateScreenDestination>()
+        composable<HivesDestination.Log> {
+            val args = it.toRoute<HivesDestination.Log>()
             val hive = currentHiveProvider.getHive(args.hiveName)
             val log = hive.getLog(args.logName)
             LogTemplate(
@@ -101,6 +101,25 @@ fun HivesNavHost() {
     }
 }
 
+sealed class HivesDestination() {
+    @Serializable
+    object List: HivesDestination()
+    @Serializable
+    data class Details(
+        val hiveName: String
+    ): HivesDestination()
+    @Serializable
+    data class Edit(
+        val hiveName: String
+    ): HivesDestination()
+    @Serializable
+    object Add: HivesDestination()
+    @Serializable
+    data class Log(
+        val logName: String,
+        val hiveName : String
+    ):HivesDestination()
+}
 @Serializable
 object ListHivesScreenDestination
 

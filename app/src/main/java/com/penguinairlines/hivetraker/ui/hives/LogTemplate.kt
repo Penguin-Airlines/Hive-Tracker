@@ -1,4 +1,4 @@
-package com.penguinairlines.hivetraker.ui.hives.logs
+package com.penguinairlines.hivetraker.ui.hives
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
