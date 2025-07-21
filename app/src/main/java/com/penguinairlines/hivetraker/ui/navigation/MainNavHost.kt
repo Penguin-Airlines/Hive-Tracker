@@ -11,7 +11,7 @@ import com.penguinairlines.hivetraker.ui.hives.HivesNavHost
 import com.penguinairlines.hivetraker.ui.tasks.TasksNavHost
 
 @Composable
-fun MainNavGraph(
+fun MainNavHost(
     navController: NavHostController,
     startDestination: NavDestination,
     modifier: Modifier = Modifier
