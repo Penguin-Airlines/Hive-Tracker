@@ -7,6 +7,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.penguinairlines.hivetraker.HomeScreen
 import com.penguinairlines.hivetraker.RecordingsScreen
+import com.penguinairlines.hivetraker.data.models.Yard
+import com.penguinairlines.hivetraker.data.providers.test.TestProvider
 import com.penguinairlines.hivetraker.ui.hives.HivesNavHost
 import com.penguinairlines.hivetraker.ui.tasks.TasksNavHost
 import kotlinx.serialization.Serializable
@@ -14,6 +16,8 @@ import kotlinx.serialization.Serializable
 @Composable
 fun MainNavHost(
     navController: NavHostController,
+    currentYard: Yard,
+    providerFactory: TestProvider,
     modifier: Modifier = Modifier
 ) {
     NavHost(
@@ -25,10 +29,17 @@ fun MainNavHost(
             HomeScreen()
         }
         composable<MainDestination.Hives> {
-            HivesNavHost()
+            HivesNavHost(
+                providerFactory = providerFactory,
+                currentYard = currentYard,
+                modifier = modifier
+            )
         }
         composable<MainDestination.Tasks> {
-            TasksNavHost()
+            TasksNavHost(
+                providerFactory = providerFactory,
+                currentYard = currentYard,
+            )
         }
         composable< MainDestination.Recordings> {
             RecordingsScreen()
