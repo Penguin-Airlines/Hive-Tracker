@@ -3,8 +3,8 @@ package com.penguinairlines.hivetraker.data.models
 import android.location.Location
 
 data class Hive(
-    val name: String,
-    val yard: Yard,
+    var name: String,
+    var yard: Yard,
     var location: Location,
     var status: HiveStatus,
     var frameCount: UInt,
