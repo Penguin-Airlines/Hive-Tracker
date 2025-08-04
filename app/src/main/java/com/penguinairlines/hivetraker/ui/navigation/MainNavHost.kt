@@ -32,7 +32,6 @@ fun MainNavHost(
             HivesNavHost(
                 providerFactory = providerFactory,
                 currentYard = currentYard,
-                modifier = modifier
             )
         }
         composable<MainDestination.Tasks> {
