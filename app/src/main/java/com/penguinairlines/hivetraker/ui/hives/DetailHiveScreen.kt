@@ -21,6 +21,7 @@ fun HiveDetailScreen(
     onEditClick: (hive: Hive) -> Unit = {},
     onBackClick: () -> Unit = {},
     logOnClick: (Log) -> Unit,
+    onAddLogClick: (Hive) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -135,12 +136,27 @@ fun HiveDetailScreen(
             }
 
             item {
-                Text(
-                    style = MaterialTheme.typography.displayMedium,
-                    text = "Logs"
-                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "Logs",
+                        style = MaterialTheme.typography.displayMedium
+                    )
+
+                    Button(
+                        onClick = { onAddLogClick(hiveData) },
+                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp)
+                    ) {
+                        Text("Add Log")
+                    }
+                }
                 HorizontalDivider()
             }
+
 
             if (hiveData.logList.isNullOrEmpty()) {
                 item {

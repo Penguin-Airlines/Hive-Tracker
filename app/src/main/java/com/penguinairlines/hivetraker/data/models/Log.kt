@@ -8,7 +8,6 @@ data class Log ( //if val is null display as N/A
     val date: Date = Date(),
     val temper: String? =null,
     val hiveCondition: String?=null,
-    val numFrames: Int?=null, //Need to implement way to have previous log of numFrames be used if user does not include
     val beeFramesBool: Boolean? = null,
     val numBeeFrames: Int? = null,
     val honeyFramesBoolBody: Boolean? = null,

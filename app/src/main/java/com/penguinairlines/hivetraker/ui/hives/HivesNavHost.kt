@@ -9,6 +9,8 @@ import androidx.navigation.toRoute
 import com.penguinairlines.hivetraker.data.models.Hive
 import com.penguinairlines.hivetraker.data.models.Yard
 import com.penguinairlines.hivetraker.data.providers.test.TestProvider
+import com.penguinairlines.hivetraker.ui.hives.logs.AddLogScreen
+import kotlinx.serialization.Serializable
 import com.penguinairlines.hivetraker.ui.hives.logs.LogTemplate
 import kotlinx.serialization.Serializable
 
@@ -56,7 +58,8 @@ fun HivesNavHost(
                     hiveNavController.navigate(
                         HivesDestination.LogTemplate(logName = log.logName, hiveName = hive.name)
                     )
-                }
+                },
+                onAddLogClick = { hive -> hiveNavController.navigate(HivesDestination.AddLog(hive.name)) }
             )
         }
 
@@ -92,7 +95,18 @@ fun HivesNavHost(
 
             LogTemplate(log = log, onLogBackClick = {hiveNavController.navigateUp()})
         }
+        composable<HivesDestination.AddLog> {
+            val args = it.toRoute<HivesDestination.AddLog>()
+            val hive = currentHiveProvider.getHive(args.hiveName)
 
+
+            AddLogScreen( hive.name,
+                onSaveClick = {
+                log ->hive.addLog(log)
+                hiveNavController.navigateUp()
+                              },
+                onLogBackClick = {hiveNavController.navigateUp()})
+        }
     }
 }
 
@@ -114,4 +128,8 @@ sealed class HivesDestination() {
         val logName: String,
         val hiveName: String
     ) : HivesDestination()
+    @Serializable
+    data class AddLog(
+        val hiveName: String
+    ): HivesDestination()
 }
