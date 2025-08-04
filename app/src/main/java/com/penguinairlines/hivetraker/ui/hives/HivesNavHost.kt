@@ -59,7 +59,8 @@ fun HivesNavHost() {
                     hiveNavController.navigate(
                         HivesDestination.LogTemplate(logName = log.logName, hiveName = hive.name)
                     )
-                }
+                },
+                onAddLogClick = { hive -> hiveNavController.navigate(HivesDestination.) }
             )
         }
 
@@ -95,7 +96,13 @@ fun HivesNavHost() {
 
             LogTemplate(log = log, onLogBackClick = {hiveNavController.navigateUp()})
         }
+        composable<HivesDestination.AddLog> {
+            val args = it.toRoute<HivesDestination.AddLog>()
+            val hive = currentHiveProvider.getHive(args.hiveName)
 
+
+            LogTemplate( onLogBackClick = {hiveNavController.navigateUp()})
+        }
     }
 }
 
@@ -117,4 +124,7 @@ sealed class HivesDestination() {
         val logName: String,
         val hiveName: String
     ) : HivesDestination()
+    data class AddLog(
+        val hiveName: String
+    ): HivesDestination()
 }

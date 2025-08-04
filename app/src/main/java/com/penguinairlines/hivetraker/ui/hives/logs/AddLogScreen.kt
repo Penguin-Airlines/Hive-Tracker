@@ -24,7 +24,6 @@ import androidx.compose.runtime.setValue
 @Composable
 fun AddLogScreen(
     hiveName: String,
-    lastLog: Log? = null,
     onSaveClick: (Log) -> Unit,
     onCancelClick: () -> Unit
 ) {
