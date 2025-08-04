@@ -25,7 +25,7 @@ import androidx.compose.runtime.setValue
 fun AddLogScreen(
     hiveName: String,
     onSaveClick: (Log) -> Unit,
-    onCancelClick: () -> Unit
+    onLogBackClick: () -> Unit
 ) {
     var logName by remember { mutableStateOf("") }
     var notes by remember { mutableStateOf("") }
@@ -79,7 +79,7 @@ fun AddLogScreen(
         },
         bottomBar = {
             Row(Modifier.padding(16.dp)) {
-                Button(onClick = onCancelClick, modifier = Modifier.weight(1f)) {
+                Button(onClick = onLogBackClick, modifier = Modifier.weight(1f)) {
                     Text("Cancel")
                 }
                 Spacer(modifier = Modifier.width(8.dp))
