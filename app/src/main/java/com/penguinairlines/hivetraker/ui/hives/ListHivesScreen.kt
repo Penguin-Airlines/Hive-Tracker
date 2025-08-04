@@ -16,13 +16,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.penguinairlines.hivetraker.data.models.Hive
-import com.penguinairlines.hivetraker.data.models.User
 import com.penguinairlines.hivetraker.data.models.Yard
 import com.penguinairlines.hivetraker.data.providers.HiveProvider
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListHivesScreen(hiveOnClick: (hive: Hive) -> Unit, addHiveOnClick: () -> Unit, hiveProvider: HiveProvider, currentUser: User, currentYard: Yard, modifier: Modifier = Modifier) {
+fun ListHivesScreen(
+    hiveOnClick: (hive: Hive) -> Unit,
+    addHiveOnClick: () -> Unit,
+    hiveProvider: HiveProvider,
+    currentYard: Yard,
+    modifier: Modifier = Modifier
+) {
     Scaffold (
         topBar = {
             CenterAlignedTopAppBar(
@@ -53,19 +58,19 @@ fun ListHivesScreen(hiveOnClick: (hive: Hive) -> Unit, addHiveOnClick: () -> Uni
         },
         modifier = modifier.fillMaxSize()
     ) { contentPadding ->
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(contentPadding)
-            ) {
-                items(hiveProvider.getHives().sortedBy { it.status.ordinal }) { hive ->
-                    HiveListItem(hive,
-                        onclick = {
-                            hiveOnClick(hive)
-                        }
-                    )
-                }
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(contentPadding)
+        ) {
+            items(hiveProvider.getHives().sortedBy { it.status.ordinal }) { hive ->
+                HiveListItem(hive,
+                    onclick = {
+                        hiveOnClick(hive)
+                    }
+                )
             }
+        }
     }
 }
 

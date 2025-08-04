@@ -6,20 +6,15 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.penguinairlines.hivetraker.data.models.User
 import com.penguinairlines.hivetraker.data.models.Yard
-import com.penguinairlines.hivetraker.data.providers.ProviderFactory
 import com.penguinairlines.hivetraker.data.providers.test.TestProvider
 import kotlinx.serialization.Serializable
 
 @Composable
-fun TasksNavHost() {
+fun TasksNavHost(providerFactory: TestProvider, currentYard: Yard) {
     val taskNavController = rememberNavController()
 
-    val currentProviderFactory: ProviderFactory = remember { TestProvider() }
-    val currentUser = remember { User("", "") }
-    val currentYard = remember { Yard("", currentUser) }
-    val currentTaskProvider = remember { currentProviderFactory.getTaskProvider(currentYard) }
+    val currentTaskProvider = remember { providerFactory.getTaskProvider(currentYard) }
 
     NavHost(
         taskNavController, startDestination = TasksDestination.List

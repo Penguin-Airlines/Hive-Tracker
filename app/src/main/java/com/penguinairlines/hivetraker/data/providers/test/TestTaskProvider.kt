@@ -6,9 +6,9 @@ import com.penguinairlines.hivetraker.data.models.Yard
 import com.penguinairlines.hivetraker.data.providers.TaskProvider
 import java.util.Calendar
 
-class TestTaskProvider: TaskProvider {
+object TestTaskProvider: TaskProvider {
     private var yard = Yard(
-        "Yard 1",
+        "Test Yard",
         User(
             "Burt Miller",
             "burtmiller@burtsbees.com"
@@ -62,20 +62,26 @@ class TestTaskProvider: TaskProvider {
         )
     )
 
+    fun copyTask(task: Task): Task {
+        return task.copy(
+            yard = yard
+        )
+    }
+
     override fun getTask(
         name: String,
         dueDate: Calendar
     ): Task {
         tasks.forEach { task ->
             if (task.name == name && task.dueDate == dueDate) {
-                return task.copy()
+                return copyTask(task)
             }
         }
         throw NoSuchElementException("Task with name $name and due date $dueDate not found")
     }
 
     override fun getTasks(): List<Task> {
-        return tasks.map { task -> task.copy() }
+        return tasks.map { task -> copyTask(task) }
     }
 
     override fun setTask(task: Task) {
