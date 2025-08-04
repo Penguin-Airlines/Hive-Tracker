@@ -60,7 +60,6 @@ fun LogTemplate(log: Log, onLogBackClick: () -> Unit = {}) {
             item { LogEntry("Notes", log.notes) }
             item { LogEntry("Temper", log.temper) }
             item { LogEntry("Hive Condition", log.hiveCondition) }
-            item { LogEntry("Number of Frames", log.numFrames?.toString()) }
             item { LogEntry("Bee Frames Present", log.beeFramesBool?.toYesNo()) }
             item { LogEntry("Bee Frame Count", log.numBeeFrames?.toString()) }
             item { LogEntry("Honey Frames in Body", log.honeyFramesBoolBody?.toYesNo()) }

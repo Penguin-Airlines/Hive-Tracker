@@ -7,7 +7,19 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+
 import com.penguinairlines.hivetraker.data.models.Log
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Column
+import androidx.compose.ui.Alignment
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+
+
 
 @Composable
 fun AddLogScreen(
@@ -45,10 +57,26 @@ fun AddLogScreen(
     var weather by remember { mutableStateOf("") }
 
     val scrollState = rememberScrollState()
-
+    val tabTitles = listOf("Basic", "Queen", "Drones", "Disease")
+    var selectedTab by remember { mutableStateOf(0) }
     Scaffold(
         topBar = {
-            Text("Add Log", style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(16.dp))
+            Column {
+                Text(
+                    text = "Add Log",
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.padding(16.dp)
+                )
+                TabRow(selectedTabIndex = selectedTab) {
+                    tabTitles.forEachIndexed { index, title ->
+                        Tab(
+                            selected = selectedTab == index,
+                            onClick = { selectedTab = index },
+                            text = { Text(title) }
+                        )
+                    }
+                }
+            }
         },
         bottomBar = {
             Row(Modifier.padding(16.dp)) {
@@ -58,22 +86,14 @@ fun AddLogScreen(
                 Spacer(modifier = Modifier.width(8.dp))
                 Button(
                     onClick = {
-                        val newLog = Log(
+                        val log = Log(
                             logName = logName,
                             hiveName = hiveName,
                             notes = notes.takeIf { it.isNotBlank() },
                             temper = temper.takeIf { it.isNotBlank() },
                             hiveCondition = hiveCondition.takeIf { it.isNotBlank() },
-                            numFrames = numFramesText.toIntOrNull() ?: lastLog?.numFrames,
                             beeFramesBool = beeFramesBool,
                             numBeeFrames = numBeeFramesText.toIntOrNull(),
-                            honeyFramesBoolBody = honeyFramesBoolBody,
-                            numHoneyFramesBody = numHoneyFramesBodyText.toIntOrNull(),
-                            honeyFramesBoolTop = honeyFramesBoolTop,
-                            numHoneyFramesTop = numHoneyFramesTopText.toIntOrNull(),
-                            broodEgg = broodEgg,
-                            broodLarvae = broodLarvae,
-                            cappedBrood = cappedBrood,
                             layingPatter = layingPattern.takeIf { it.isNotBlank() },
                             queenSeen = queenSeen,
                             queenNotes = queenNotes.takeIf { it.isNotBlank() },
@@ -86,9 +106,9 @@ fun AddLogScreen(
                             disease = disease.takeIf { it.isNotBlank() },
                             pest = pest.takeIf { it.isNotBlank() },
                             diseasePestNotes = diseasePestNotes.takeIf { it.isNotBlank() },
-                            weather = weather.takeIf { it.isNotBlank() }
+                            weather = null, // Fill in other fields as needed
                         )
-                        onSaveClick(newLog)
+                        onSaveClick(log)
                     },
                     modifier = Modifier.weight(1f),
                     enabled = logName.isNotBlank()
@@ -101,28 +121,55 @@ fun AddLogScreen(
         Column(
             modifier = Modifier
                 .padding(padding)
-                .verticalScroll(scrollState)
                 .padding(16.dp)
         ) {
-            OutlinedTextField(value = logName, onValueChange = { logName = it }, label = { Text("Log Name*") })
-            OutlinedTextField(value = notes, onValueChange = { notes = it }, label = { Text("Notes") })
-            OutlinedTextField(value = temper, onValueChange = { temper = it }, label = { Text("Temperament") })
-            OutlinedTextField(value = hiveCondition, onValueChange = { hiveCondition = it }, label = { Text("Hive Condition") })
-            OutlinedTextField(value = numFramesText, onValueChange = { numFramesText = it }, label = { Text("Frame Count") })
-            OutlinedTextField(value = numBeeFramesText, onValueChange = { numBeeFramesText = it }, label = { Text("Bee Frames Count") })
-            OutlinedTextField(value = numHoneyFramesBodyText, onValueChange = { numHoneyFramesBodyText = it }, label = { Text("Honey Frames (Body)") })
-            OutlinedTextField(value = numHoneyFramesTopText, onValueChange = { numHoneyFramesTopText = it }, label = { Text("Honey Frames (Top)") })
-            OutlinedTextField(value = layingPattern, onValueChange = { layingPattern = it }, label = { Text("Laying Pattern") })
-            OutlinedTextField(value = queenNotes, onValueChange = { queenNotes = it }, label = { Text("Queen Notes") })
-            OutlinedTextField(value = queenCellsNotes, onValueChange = { queenCellsNotes = it }, label = { Text("Queen Cell Notes") })
-            OutlinedTextField(value = dronesNotes, onValueChange = { dronesNotes = it }, label = { Text("Drone Notes") })
-            OutlinedTextField(value = disease, onValueChange = { disease = it }, label = { Text("Disease") })
-            OutlinedTextField(value = pest, onValueChange = { pest = it }, label = { Text("Pests") })
-            OutlinedTextField(value = diseasePestNotes, onValueChange = { diseasePestNotes = it }, label = { Text("Disease/Pest Notes") })
-            OutlinedTextField(value = weather, onValueChange = { weather = it }, label = { Text("Weather") })
-
-            // You can also use Switch/Checkbox/Toggle for boolean fields
-            Text("Use switches or checkboxes for booleans in your actual UI")
+            when (selectedTab) {
+                0 -> {
+                    OutlinedTextField(value = logName, onValueChange = { logName = it }, label = { Text("Log Name*") })
+                    OutlinedTextField(value = notes, onValueChange = { notes = it }, label = { Text("Notes") })
+                    OutlinedTextField(value = temper, onValueChange = { temper = it }, label = { Text("Temper") })
+                    OutlinedTextField(value = hiveCondition, onValueChange = { hiveCondition = it }, label = { Text("Hive Condition") })
+                    OutlinedTextField(value = numBeeFramesText, onValueChange = { numBeeFramesText = it }, label = { Text("Bee Frames") })
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Checkbox(checked = beeFramesBool, onCheckedChange = { beeFramesBool = it })
+                        Text("Bee Frames Present")
+                    }
+                }
+                1 -> {
+                    OutlinedTextField(value = layingPattern, onValueChange = { layingPattern = it }, label = { Text("Laying Pattern") })
+                    OutlinedTextField(value = queenNotes, onValueChange = { queenNotes = it }, label = { Text("Queen Notes") })
+                    OutlinedTextField(value = queenCellsNotes, onValueChange = { queenCellsNotes = it }, label = { Text("Queen Cells Notes") })
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Checkbox(checked = queenSeen, onCheckedChange = { queenSeen = it })
+                        Text("Queen Seen")
+                    }
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Checkbox(checked = queenCells, onCheckedChange = { queenCells = it })
+                        Text("Queen Cells Present")
+                    }
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Checkbox(checked = noQueen, onCheckedChange = { noQueen = it })
+                        Text("No Queen")
+                    }
+                }
+                2 -> {
+                    OutlinedTextField(value = dronesNotes, onValueChange = { dronesNotes = it }, label = { Text("Drone Notes") })
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Checkbox(checked = droneCells, onCheckedChange = { droneCells = it })
+                        Text("Drone Cells")
+                    }
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Checkbox(checked = dronesBool, onCheckedChange = { dronesBool = it })
+                        Text("Drones Present")
+                    }
+                }
+                3 -> {
+                    OutlinedTextField(value = disease, onValueChange = { disease = it }, label = { Text("Disease") })
+                    OutlinedTextField(value = pest, onValueChange = { pest = it }, label = { Text("Pest") })
+                    OutlinedTextField(value = diseasePestNotes, onValueChange = { diseasePestNotes = it }, label = { Text("Disease/Pest Notes") })
+                }
+            }
         }
     }
+
 }
