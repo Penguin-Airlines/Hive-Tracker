@@ -22,10 +22,11 @@ class TestProvider: ProviderFactory {
     override fun getHiveProvider(
         yard: Yard
     ): HiveProvider {
-        return TestHiveProvider()
+        TestHiveProvider.yard = yard
+        return TestHiveProvider
     }
 
     override fun getTaskProvider(yard: Yard): TaskProvider {
-        return TestTaskProvider()
+        return TestTaskProvider
     }
 }

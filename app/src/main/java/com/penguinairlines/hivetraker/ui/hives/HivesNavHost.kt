@@ -7,20 +7,21 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.penguinairlines.hivetraker.data.models.Hive
-import com.penguinairlines.hivetraker.data.models.User
 import com.penguinairlines.hivetraker.data.models.Yard
-import com.penguinairlines.hivetraker.data.providers.ProviderFactory
 import com.penguinairlines.hivetraker.data.providers.test.TestProvider
+import com.penguinairlines.hivetraker.ui.hives.logs.AddLogScreen
+import kotlinx.serialization.Serializable
+import com.penguinairlines.hivetraker.ui.hives.logs.LogTemplate
 import kotlinx.serialization.Serializable
 
 @Composable
-fun HivesNavHost() {
+fun HivesNavHost(
+    providerFactory: TestProvider,
+    currentYard: Yard,
+) {
     val hiveNavController = rememberNavController()
 
-    val currentProviderFactory: ProviderFactory = remember { TestProvider() }
-    val currentUser = remember{User("", "")}
-    val currentYard = remember{Yard("", currentUser)}
-    val currentHiveProvider = remember { currentProviderFactory.getHiveProvider(currentYard) }
+    val hiveProvider = remember { providerFactory.getHiveProvider(currentYard) }
 
     NavHost(
         hiveNavController, startDestination = HivesDestination.List
@@ -37,8 +38,7 @@ fun HivesNavHost() {
                         HivesDestination.Add
                     )
                 },
-                currentHiveProvider,
-                currentUser,
+                hiveProvider,
                 currentYard
             )
 
@@ -46,27 +46,30 @@ fun HivesNavHost() {
 
         composable<HivesDestination.Details> {
             val args = it.toRoute<HivesDestination.Details>()
-            val hive = currentHiveProvider.getHive(args.hiveName)
+            val hive = hiveProvider.getHive(args.hiveName)
+
             HiveDetailScreen(
-                hive,
-                onBackClick = {
-                    hiveNavController.navigateUp()
-                },
+                hiveData = hive,
+                onBackClick = { hiveNavController.navigateUp() },
                 onEditClick = {
+                    hiveNavController.navigate(HivesDestination.Edit(hive.name))
+                },
+                logOnClick = { log ->
                     hiveNavController.navigate(
-                        HivesDestination.Edit(hive.name)
+                        HivesDestination.LogTemplate(logName = log.logName, hiveName = hive.name)
                     )
-                }
+                },
+                onAddLogClick = { hive -> hiveNavController.navigate(HivesDestination.AddLog(hive.name)) }
             )
         }
 
         composable<HivesDestination.Edit> {
             val args = it.toRoute<HivesDestination.Edit>()
-            val hive = currentHiveProvider.getHive(args.hiveName)
+            val hive = hiveProvider.getHive(args.hiveName)
             EditHiveScreen(
                 hive,
                 saveHive = { updatedHive ->
-                    currentHiveProvider.setHive(updatedHive)
+                    hiveProvider.setHive(updatedHive)
                     hiveNavController.navigateUp()
                 }
             )
@@ -78,11 +81,31 @@ fun HivesNavHost() {
                     hiveNavController.navigateUp()
                 },
                 onSaveClick = { hiveData ->
-                    currentHiveProvider.setHive(hiveData)
+                    hiveProvider.setHive(hiveData)
                     hiveNavController.navigateUp()
                 }
 
             )
+        }
+        composable<HivesDestination.LogTemplate> {
+            val args = it.toRoute<HivesDestination.LogTemplate>()
+            val hive = hiveProvider.getHive(args.hiveName)
+            val log = hive.getLog(args.logName)
+
+
+            LogTemplate(log = log, onLogBackClick = {hiveNavController.navigateUp()})
+        }
+        composable<HivesDestination.AddLog> {
+            val args = it.toRoute<HivesDestination.AddLog>()
+            val hive = currentHiveProvider.getHive(args.hiveName)
+
+
+            AddLogScreen( hive.name,
+                onSaveClick = {
+                log ->hive.addLog(log)
+                hiveNavController.navigateUp()
+                              },
+                onLogBackClick = {hiveNavController.navigateUp()})
         }
     }
 }
@@ -100,4 +123,13 @@ sealed class HivesDestination() {
     ): HivesDestination()
     @Serializable
     object Add: HivesDestination()
+    @Serializable
+    data class LogTemplate(
+        val logName: String,
+        val hiveName: String
+    ) : HivesDestination()
+    @Serializable
+    data class AddLog(
+        val hiveName: String
+    ): HivesDestination()
 }
