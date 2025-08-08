@@ -31,6 +31,7 @@ import com.penguinairlines.hivetraker.data.models.Task
 import com.penguinairlines.hivetraker.data.models.User
 import com.penguinairlines.hivetraker.data.models.Yard
 import com.penguinairlines.hivetraker.data.providers.TaskProvider
+import com.penguinairlines.hivetraker.data.providers.test.TestTaskProvider
 import java.util.Calendar
 import java.util.Locale
 
@@ -92,35 +93,83 @@ fun ListTaskScreen(
                 tasksInMonth.groupBy { it.dueDate.get(Calendar.DAY_OF_MONTH) }.forEach { (_, tasksOnDay) ->
                     // Display the day header
                     item {
-                        Row {
-                            // Display the date circle
-                            DateCircle(
-                                date = tasksOnDay.first().dueDate,
-                                modifier = Modifier.padding(8.dp)
-                            )
-
-                            // Display the tasks for that day
-                            Column {
-                                tasksOnDay.forEach { task ->
-                                    val context = LocalContext.current
-                                    TaskListItem(
-                                        task = task,
-                                        onClick = {
-                                            // Handle task click
-                                            Toast.makeText(context, it.name + " was clicked", Toast.LENGTH_SHORT).show()
-                                        }
-                                    )
-                                }
-                            }
-
-                        }
-
+                        val context = LocalContext.current
+                        DayItem(
+                            date = tasksOnDay.first().dueDate,
+                            tasks = tasksOnDay,
+                            onTaskClick = { task ->
+                                // Handle task click
+                                Toast.makeText(context, task.name + " was clicked", Toast.LENGTH_SHORT).show()
+                            })
                     }
                 }
             }
 
         }
     }
+}
+
+@Composable
+fun DayItem(
+    date: Calendar,
+    tasks: List<Task>,
+    onTaskClick: (Task) -> Unit
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        DateCircle(date, Modifier.padding(8.dp))
+
+        // Display the tasks for that day
+        Column(modifier = Modifier.weight(1f)) {
+            tasks.forEach { task ->
+                TaskListItem(task = task, onClick = onTaskClick)
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun DayItemPreview() {
+    val testDate = Calendar.getInstance().apply {
+        set(Calendar.DAY_OF_MONTH, 15)
+        set(Calendar.MONTH, Calendar.OCTOBER)
+        set(Calendar.YEAR, 2023)
+    }
+    val testTasks = listOf(
+        Task(
+            name = "Test Task 1",
+            dueDate = testDate,
+            description = "This is a test task description.",
+            yard = Yard(
+                name = "Test Yard",
+                owner = User(
+                    name = "Test User",
+                    email = "test@example.com"
+                )
+            )
+        ),
+        Task(
+            name = "Test Task 2",
+            dueDate = testDate,
+            description = "This is another test task description.",
+            yard = Yard(
+                name = "Test Yard",
+                owner = User(
+                    name = "Test User",
+                    email = "test@example.com"
+                )
+            )
+        )
+    )
+    DayItem(
+        date = testDate,
+        tasks = testTasks,
+        onTaskClick = { task ->
+            // Handle task click
+        }
+    )
 }
 
 @Composable
@@ -218,7 +267,7 @@ fun isSameDay(cal1: Calendar, cal2: Calendar): Boolean {
 
 @Preview
 @Composable
-fun TaskListITemPreview() {
+fun TaskListItemPreview() {
     val testTask = Task(
         name = "Test Task",
         dueDate = Calendar.getInstance(),
@@ -234,3 +283,37 @@ fun TaskListITemPreview() {
     )
     TaskListItem(testTask) { }
 }
+
+@Preview
+@Composable
+fun DateCirclePreview() {
+    val testDate = Calendar.getInstance().apply {
+        set(Calendar.DAY_OF_MONTH, 15)
+        set(Calendar.MONTH, Calendar.OCTOBER)
+        set(Calendar.YEAR, 2023)
+    }
+    DateCircle(testDate, Modifier.padding(8.dp))
+}
+
+@Preview
+@Composable
+fun DateCircleTodayPreview() {
+    val today = Calendar.getInstance()
+    DateCircle(today, Modifier.padding(8.dp))
+}
+
+@Preview
+@Composable
+fun MonthHeaderPreview() {
+    MonthHeader(month = Calendar.OCTOBER)
+}
+
+@Preview
+@Composable
+fun ListTaskScreenPreview() {
+    ListTaskScreen(
+        taskProvider = TestTaskProvider,
+        onAddTaskClick = { /* Handle add task click */ }
+    )
+}
+
