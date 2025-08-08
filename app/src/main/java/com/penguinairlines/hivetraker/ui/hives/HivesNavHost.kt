@@ -12,7 +12,6 @@ import com.penguinairlines.hivetraker.data.providers.test.TestProvider
 import com.penguinairlines.hivetraker.ui.hives.logs.AddLogScreen
 import kotlinx.serialization.Serializable
 import com.penguinairlines.hivetraker.ui.hives.logs.LogTemplate
-import kotlinx.serialization.Serializable
 
 @Composable
 fun HivesNavHost(
@@ -97,12 +96,16 @@ fun HivesNavHost(
         }
         composable<HivesDestination.AddLog> {
             val args = it.toRoute<HivesDestination.AddLog>()
-            val hive = currentHiveProvider.getHive(args.hiveName)
+            val hive = hiveProvider.getHive(args.hiveName)
 
 
             AddLogScreen( hive.name,
                 onSaveClick = {
-                log ->hive.addLog(log)
+                log -> hive.addLog(log)
+                    for (lg in hive.logList) {
+                        println(lg.logName)
+                    }
+                    hiveProvider.setHive(hive)
                 hiveNavController.navigateUp()
                               },
                 onLogBackClick = {hiveNavController.navigateUp()})
