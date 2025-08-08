@@ -10,7 +10,6 @@ import com.penguinairlines.hivetraker.data.models.Hive
 import com.penguinairlines.hivetraker.data.models.Yard
 import com.penguinairlines.hivetraker.data.providers.test.TestProvider
 import com.penguinairlines.hivetraker.ui.hives.logs.AddLogScreen
-import kotlinx.serialization.Serializable
 import com.penguinairlines.hivetraker.ui.hives.logs.LogTemplate
 import kotlinx.serialization.Serializable
 
@@ -97,7 +96,7 @@ fun HivesNavHost(
         }
         composable<HivesDestination.AddLog> {
             val args = it.toRoute<HivesDestination.AddLog>()
-            val hive = currentHiveProvider.getHive(args.hiveName)
+            val hive = hiveProvider.getHive(args.hiveName)
 
 
             AddLogScreen( hive.name,
@@ -111,19 +110,19 @@ fun HivesNavHost(
 }
 
 sealed class HivesDestination() {
-    @Serializable
+    @kotlinx.serialization.Serializable
     object List: HivesDestination()
-    @Serializable
+    @kotlinx.serialization.Serializable
     data class Details(
         val hiveName: String
     ): HivesDestination()
-    @Serializable
+    @kotlinx.serialization.Serializable
     data class Edit(
         val hiveName: String
     ): HivesDestination()
-    @Serializable
+    @kotlinx.serialization.Serializable
     object Add: HivesDestination()
-    @Serializable
+    @kotlinx.serialization.Serializable
     data class LogTemplate(
         val logName: String,
         val hiveName: String
