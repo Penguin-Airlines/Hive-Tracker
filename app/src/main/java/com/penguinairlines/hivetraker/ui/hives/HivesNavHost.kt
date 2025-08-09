@@ -11,7 +11,6 @@ import com.penguinairlines.hivetraker.data.models.Yard
 import com.penguinairlines.hivetraker.data.providers.test.TestProvider
 import com.penguinairlines.hivetraker.ui.hives.logs.AddLogScreen
 import com.penguinairlines.hivetraker.ui.hives.logs.LogTemplate
-import kotlinx.serialization.Serializable
 
 @Composable
 fun HivesNavHost(
@@ -21,7 +20,7 @@ fun HivesNavHost(
     val hiveNavController = rememberNavController()
 
     val hiveProvider = remember { providerFactory.getHiveProvider(currentYard) }
-
+    val logProvider = providerFactory.getLogProvider(currentYard)
     NavHost(
         hiveNavController, startDestination = HivesDestination.List
     ) {
@@ -89,8 +88,7 @@ fun HivesNavHost(
         composable<HivesDestination.LogTemplate> {
             val args = it.toRoute<HivesDestination.LogTemplate>()
             val hive = hiveProvider.getHive(args.hiveName)
-            val log = hive.getLog(args.logName)
-
+            val log = logProvider.getLogByHiveAndName(hive.name,args.logName) ?: throw NoSuchElementException()
 
             LogTemplate(log = log, onLogBackClick = {hiveNavController.navigateUp()})
         }
@@ -101,7 +99,7 @@ fun HivesNavHost(
 
             AddLogScreen( hive.name,
                 onSaveClick = {
-                log ->hive.addLog(log)
+                log -> logProvider.addLog(hive.name,log)
                 hiveNavController.navigateUp()
                               },
                 onLogBackClick = {hiveNavController.navigateUp()})

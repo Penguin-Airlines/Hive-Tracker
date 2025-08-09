@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.penguinairlines.hivetraker.data.models.Hive
 import com.penguinairlines.hivetraker.data.models.Log
+import com.penguinairlines.hivetraker.data.providers.test.TestLogProvider
 import com.penguinairlines.hivetraker.ui.hives.logs.LogListItem
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -158,7 +159,7 @@ fun HiveDetailScreen(
             }
 
 
-            if (hiveData.logList.isNullOrEmpty()) {
+            if (TestLogProvider.getLogsForHive(hiveData.name).isNullOrEmpty()) {
                 item {
                     Text(
                         text = "No Logs Yet",
@@ -167,7 +168,7 @@ fun HiveDetailScreen(
                     )
                 }
             } else {
-                items(hiveData.logList) { log ->
+                items(TestLogProvider.getLogsForHive(hiveData.name)) { log ->
                     LogListItem(
                         log = log,
                         onclick = { logOnClick(log) }
