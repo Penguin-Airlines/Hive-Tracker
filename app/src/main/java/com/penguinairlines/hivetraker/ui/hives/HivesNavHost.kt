@@ -21,7 +21,7 @@ fun HivesNavHost(
     val hiveNavController = rememberNavController()
 
     val hiveProvider = remember { providerFactory.getHiveProvider(currentYard) }
-
+    val logProvider = providerFactory.getLogProvider(currentYard)
     NavHost(
         hiveNavController, startDestination = HivesDestination.List
     ) {
@@ -89,8 +89,7 @@ fun HivesNavHost(
         composable<HivesDestination.LogTemplate> {
             val args = it.toRoute<HivesDestination.LogTemplate>()
             val hive = hiveProvider.getHive(args.hiveName)
-            val log = hive.getLog(args.logName)
-
+            val log = logProvider.getLogByHiveAndName(hive.name,args.logName) ?: throw NoSuchElementException()
 
             LogTemplate(log = log, onLogBackClick = {hiveNavController.navigateUp()})
         }
@@ -101,11 +100,7 @@ fun HivesNavHost(
 
             AddLogScreen( hive.name,
                 onSaveClick = {
-                log -> hive.addLog(log)
-                    for (lg in hive.logList) {
-                        println(lg.logName)
-                    }
-                    hiveProvider.setHive(hive)
+                log -> logProvider.addLog(hive.name,log)
                 hiveNavController.navigateUp()
                               },
                 onLogBackClick = {hiveNavController.navigateUp()})
