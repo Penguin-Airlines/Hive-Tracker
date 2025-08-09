@@ -24,7 +24,7 @@ import androidx.compose.runtime.setValue
 @Composable
 fun AddLogScreen(
     hiveName: String,
-    onSaveClick: (Log) -> Unit,
+    onSaveClick: (log:Log) -> Unit,
     onLogBackClick: () -> Unit
 ) {
     var logName by remember { mutableStateOf("") }
@@ -93,6 +93,13 @@ fun AddLogScreen(
                             hiveCondition = hiveCondition.takeIf { it.isNotBlank() },
                             beeFramesBool = beeFramesBool,
                             numBeeFrames = numBeeFramesText.toIntOrNull(),
+                            honeyFramesBoolBody = honeyFramesBoolBody,
+                            numHoneyFramesBody = numHoneyFramesBodyText.toIntOrNull(),
+                            honeyFramesBoolTop = honeyFramesBoolTop,
+                            numHoneyFramesTop = numHoneyFramesTopText.toIntOrNull(),
+                            broodEgg = broodEgg,
+                            broodLarvae = broodLarvae,
+                            cappedBrood = cappedBrood,
                             layingPatter = layingPattern.takeIf { it.isNotBlank() },
                             queenSeen = queenSeen,
                             queenNotes = queenNotes.takeIf { it.isNotBlank() },
@@ -105,7 +112,7 @@ fun AddLogScreen(
                             disease = disease.takeIf { it.isNotBlank() },
                             pest = pest.takeIf { it.isNotBlank() },
                             diseasePestNotes = diseasePestNotes.takeIf { it.isNotBlank() },
-                            weather = null, // Fill in other fields as needed
+                            weather = weather.takeIf { it.isNotBlank() }
                         )
                         onSaveClick(log)
                     },
@@ -166,6 +173,7 @@ fun AddLogScreen(
                     OutlinedTextField(value = disease, onValueChange = { disease = it }, label = { Text("Disease") })
                     OutlinedTextField(value = pest, onValueChange = { pest = it }, label = { Text("Pest") })
                     OutlinedTextField(value = diseasePestNotes, onValueChange = { diseasePestNotes = it }, label = { Text("Disease/Pest Notes") })
+
                 }
             }
         }

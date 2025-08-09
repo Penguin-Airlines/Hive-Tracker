@@ -3,6 +3,7 @@ package com.penguinairlines.hivetraker.data.providers.test
 import com.penguinairlines.hivetraker.data.models.User
 import com.penguinairlines.hivetraker.data.models.Yard
 import com.penguinairlines.hivetraker.data.providers.HiveProvider
+import com.penguinairlines.hivetraker.data.providers.LogProvider
 import com.penguinairlines.hivetraker.data.providers.ProviderFactory
 import com.penguinairlines.hivetraker.data.providers.TaskProvider
 import com.penguinairlines.hivetraker.data.providers.UserProvider
@@ -28,5 +29,10 @@ class TestProvider: ProviderFactory {
 
     override fun getTaskProvider(yard: Yard): TaskProvider {
         return TestTaskProvider
+    }
+
+    override fun getLogProvider(yard: Yard): LogProvider {
+        TestLogProvider.yard=yard
+        return TestLogProvider
     }
 }

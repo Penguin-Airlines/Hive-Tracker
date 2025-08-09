@@ -7,6 +7,6 @@ interface ProviderFactory {
     fun getUserProvider(): UserProvider
     fun getYardProvider(owner: User): YardProvider
     fun getHiveProvider(yard: Yard): HiveProvider
-
+    fun getLogProvider(yard : Yard) : LogProvider
     fun getTaskProvider(yard: Yard): TaskProvider
 }
