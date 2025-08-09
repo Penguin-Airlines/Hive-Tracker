@@ -1,5 +1,6 @@
 package com.penguinairlines.hivetraker.data.providers.test
 
+import com.penguinairlines.hivetraker.BuildConfig
 import com.penguinairlines.hivetraker.data.models.Task
 import com.penguinairlines.hivetraker.data.models.User
 import com.penguinairlines.hivetraker.data.models.Yard
@@ -14,7 +15,8 @@ object TestTaskProvider: TaskProvider {
             "burtmiller@burtsbees.com"
         )
     )
-    private var tasks = mutableListOf(
+    private var tasks = if (BuildConfig.DEBUG_VARIANT == "DEFAULT") {
+        mutableListOf(
         Task(
             "Task 1",
             yard,
@@ -60,7 +62,22 @@ object TestTaskProvider: TaskProvider {
             },
             description = "A task due in a month",
         )
-    )
+    ) }
+    else if (BuildConfig.DEBUG_VARIANT == "MANY_TASKS") {
+       List(10000) {
+           Task(
+               "Task $it",
+               yard,
+               dueDate = Calendar.getInstance().apply {
+                   add(Calendar.DAY_OF_MONTH, it)
+               },
+               description = "A task number $it to complete",
+           )
+       }.toMutableList()
+    }
+    else {
+        mutableListOf()
+    }
 
     fun copyTask(task: Task): Task {
         return task.copy(

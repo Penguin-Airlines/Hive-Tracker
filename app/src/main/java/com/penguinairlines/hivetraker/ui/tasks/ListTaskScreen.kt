@@ -317,3 +317,46 @@ fun ListTaskScreenPreview() {
     )
 }
 
+@Preview
+@Composable
+fun ManyTasksPreview() {
+    var testTasks: List<Task> = List(5000) { index ->
+        Task(
+            name = "Task $index",
+            dueDate = Calendar.getInstance().apply {
+                add(Calendar.DAY_OF_MONTH, index % 30) // Spread tasks over the month
+            },
+            description = "Description for task $index",
+            yard = Yard(
+                name = "Yard 1",
+                owner = User(
+                    name = "User 1",
+                    email = "user@example.com"
+                )
+            )
+        )
+    }
+
+    val taskProvider = object : TaskProvider {
+        override fun getTask(
+            name: String,
+            dueDate: Calendar
+        ): Task {
+            TODO("Not yet implemented")
+        }
+
+        override fun getTasks(): List<Task> = testTasks
+        override fun setTask(task: Task) {
+            TODO("Not yet implemented")
+        }
+
+        override fun setTasks(tasks: List<Task>) {
+            TODO("Not yet implemented")
+        }
+    }
+
+    ListTaskScreen(
+        taskProvider = taskProvider,
+        onAddTaskClick = { /* Handle add task click */ }
+    )
+}

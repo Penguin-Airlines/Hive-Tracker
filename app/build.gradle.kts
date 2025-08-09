@@ -1,5 +1,3 @@
-import org.gradle.kotlin.dsl.implementation
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -22,6 +20,18 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    flavorDimensions += "variant"
+    productFlavors {
+        create("default") {
+            dimension = "variant"
+            buildConfigField("String", "DEBUG_VARIANT", "\"DEFAULT\"")
+        }
+        create("many_tasks") {
+            dimension = "variant"
+            buildConfigField("String", "DEBUG_VARIANT", "\"MANY_TASKS\"")
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -29,6 +39,10 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+        debug {
+//            buildConfigField("String", "DEBUG_VARIANT", "\"DEFAULT\"")
+//            buildConfigField("String", "DEBUG_VARIANT", "\"MANY_TASKS\"")
         }
     }
     compileOptions {
@@ -40,6 +54,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
