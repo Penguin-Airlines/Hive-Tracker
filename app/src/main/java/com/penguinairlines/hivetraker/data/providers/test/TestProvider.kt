@@ -29,4 +29,8 @@ class TestProvider: ProviderFactory {
     override fun getTaskProvider(yard: Yard): TaskProvider {
         return TestTaskProvider
     }
+
+    override fun getRecordingProvider(yard: Yard): RecordingProvider {
+        return TestTaskProvider
+    }
 }
