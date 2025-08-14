@@ -59,7 +59,7 @@ android {
 }
 
 dependencies {
-
+    implementation("com.alphacephei:vosk-android:0.3.47")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -71,6 +71,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation("androidx.compose.material:material-icons-extended")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+    implementation(libs.androidx.monitor)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

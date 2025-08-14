@@ -1,15 +1,8 @@
 package com.penguinairlines.hivetraker.ui.recordings
-import android.content.Intent
-import android.speech.RecognizerIntent
+
 import android.Manifest
-import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
-import android.media.AudioManager
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.speech.SpeechRecognizer
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
@@ -22,10 +15,17 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.penguinairlines.hivetraker.data.models.Recording
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import org.vosk.Model
+import org.vosk.Recognizer
+import org.vosk.android.RecognitionListener
+import org.vosk.android.SpeechService
+import java.io.File
+import java.io.FileOutputStream
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,7 +35,6 @@ fun AddRecordingScreen(
     onSave: (Recording) -> Unit
 ) {
     val context = LocalContext.current
-    val audioManager = androidx.core.content.ContextCompat.getSystemService(context, AudioManager::class.java)
     var isRecording by remember { mutableStateOf(false) }
     var recordedText by remember { mutableStateOf("") }
     var currentChunk by remember { mutableStateOf("") }
@@ -49,8 +48,7 @@ fun AddRecordingScreen(
 
     LaunchedEffect(Unit) {
         micPermissionGranted = androidx.core.content.ContextCompat.checkSelfPermission(
-            context,
-            Manifest.permission.RECORD_AUDIO
+            context, Manifest.permission.RECORD_AUDIO
         ) == PackageManager.PERMISSION_GRANTED
 
         if (!micPermissionGranted) {
@@ -58,88 +56,83 @@ fun AddRecordingScreen(
         }
     }
 
-    val speechRecognizer = remember { SpeechRecognizer.createSpeechRecognizer(context) }
-    val recognizerIntent = remember {
-        Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
-            putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-            putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
-            putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
-        }
-    }
+    var speechService by remember { mutableStateOf<SpeechService?>(null) }
 
-    // Helper to restart listening safely
+    // Recursive copy of model folder
+    suspend fun copyModelToFiles(context: Context, assetFolder: String): File = withContext(Dispatchers.IO) {
+        val outDir = File(context.filesDir, assetFolder)
+        if (!outDir.exists()) outDir.mkdirs()
 
-
-    // Start listening with system beep muted
-    fun startListening() {
-        if (!micPermissionGranted || !isRecording) return
-
-        val audioManager = androidx.core.content.ContextCompat.getSystemService(context, AudioManager::class.java)
-        audioManager?.let { am ->
-            val originalVolume = am.getStreamVolume(AudioManager.STREAM_SYSTEM)
-            am.setStreamVolume(AudioManager.STREAM_SYSTEM, 0, 0) // mute beep
-
-            try {
-                speechRecognizer.startListening(recognizerIntent)
-            } catch (e: Exception) { e.printStackTrace() }
-
-            // Restore volume after short delay
-            Handler(Looper.getMainLooper()).postDelayed({
-                am.setStreamVolume(AudioManager.STREAM_SYSTEM, originalVolume, 0)
-            }, 100)
-        } ?: run {
-            // fallback if AudioManager is null
-            speechRecognizer.startListening(recognizerIntent)
-        }
-    }
-    fun restartListening() {
-        if (!isRecording) return
-        try {
-            speechRecognizer.cancel()
-            Handler(Looper.getMainLooper()).postDelayed({ startListening() }, 300)
-        } catch (e: Exception) { e.printStackTrace() }
-    }
-
-    DisposableEffect(Unit) {
-        val listener = object : android.speech.RecognitionListener {
-            override fun onReadyForSpeech(params: Bundle?) {}
-            override fun onBeginningOfSpeech() {}
-            override fun onRmsChanged(rmsdB: Float) {}
-            override fun onBufferReceived(buffer: ByteArray?) {}
-
-            override fun onEndOfSpeech() {
-                // Do nothing; restart only in onResults or onError
-            }
-
-            override fun onError(error: Int) {
-                if (isRecording) {
-                    when (error) {
-                        SpeechRecognizer.ERROR_CLIENT,
-                        SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> isRecording = false
-                        else -> restartListening()
+        fun copyFolder(srcPath: String, destFile: File) {
+            context.assets.list(srcPath)?.forEach { name ->
+                val srcName = "$srcPath/$name"
+                val destName = File(destFile, name)
+                if (context.assets.list(srcName)?.isNotEmpty() == true) {
+                    destName.mkdirs()
+                    copyFolder(srcName, destName)
+                } else {
+                    context.assets.open(srcName).use { input ->
+                        FileOutputStream(destName).use { output -> input.copyTo(output) }
                     }
                 }
             }
-
-            override fun onResults(results: Bundle?) {
-                val finalText = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)?.joinToString(" ")
-                if (!finalText.isNullOrBlank()) {
-                    recordedText += if (recordedText.isNotBlank()) " $finalText" else finalText
-                }
-                currentChunk = ""
-                if (isRecording) restartListening()
-            }
-
-            override fun onPartialResults(partialResults: Bundle?) {
-                val partialText = partialResults?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)?.joinToString(" ")
-                if (!partialText.isNullOrBlank()) currentChunk = partialText
-            }
-
-            override fun onEvent(eventType: Int, params: Bundle?) {}
         }
 
-        speechRecognizer.setRecognitionListener(listener)
-        onDispose { speechRecognizer.destroy() }
+        copyFolder(assetFolder, outDir)
+        outDir
+    }
+
+    // Vosk listener
+    val voskListener = remember {
+        object : RecognitionListener {
+            override fun onPartialResult(hypothesis: String?) {
+                if (!hypothesis.isNullOrBlank()) currentChunk = hypothesis
+            }
+
+            override fun onResult(hypothesis: String?) {
+                if (!hypothesis.isNullOrBlank()) {
+                    recordedText += if (recordedText.isNotBlank()) " $hypothesis" else hypothesis
+                }
+                currentChunk = ""
+            }
+
+            override fun onFinalResult(hypothesis: String?) {
+                if (!hypothesis.isNullOrBlank()) {
+                    recordedText += if (recordedText.isNotBlank()) " $hypothesis" else hypothesis
+                }
+                currentChunk = ""
+            }
+
+            override fun onError(exception: Exception?) {
+                exception?.printStackTrace()
+            }
+
+            override fun onTimeout() {}
+        }
+    }
+
+    // Start/stop listening
+    LaunchedEffect(isRecording) {
+        if (isRecording && micPermissionGranted) {
+            try {
+                val modelDir = copyModelToFiles(context, "vosk-model-small-en-us-0.15")
+                val model = Model(modelDir.absolutePath)
+                val recognizer = Recognizer(model, 16000.0f)
+                speechService = SpeechService(recognizer, 16000.0f)
+                speechService?.startListening(voskListener)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                isRecording = false
+            }
+        } else {
+            speechService?.shutdown()
+            speechService = null
+            currentChunk = ""
+        }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose { speechService?.shutdown() }
     }
 
     Scaffold(
@@ -156,23 +149,19 @@ fun AddRecordingScreen(
             ) {
                 FloatingActionButton(
                     onClick = {
-                        if (!micPermissionGranted) { permissionLauncher.launch(Manifest.permission.RECORD_AUDIO); return@FloatingActionButton }
-
-                        if (isRecording) {
-                            isRecording = false
-                            speechRecognizer.stopListening()
-                        } else {
-                            isRecording = true
-                            startListening()
+                        if (!micPermissionGranted) {
+                            permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+                            return@FloatingActionButton
                         }
+                        isRecording = !isRecording
                     },
-                    containerColor = if (isRecording) Color.Red else MaterialTheme.colorScheme.primary,
+                    containerColor = if (isRecording) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
                     shape = CircleShape
                 ) {
                     Icon(
                         imageVector = if (isRecording) Icons.Default.Stop else Icons.Default.Mic,
                         contentDescription = if (isRecording) "Stop" else "Record",
-                        tint = Color.White
+                        tint = MaterialTheme.colorScheme.onPrimary
                     )
                 }
             }
@@ -215,4 +204,3 @@ fun AddRecordingScreen(
         )
     }
 }
-
