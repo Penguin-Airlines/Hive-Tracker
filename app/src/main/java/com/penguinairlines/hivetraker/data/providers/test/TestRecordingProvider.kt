@@ -13,10 +13,12 @@ object TestRecordingProvider : RecordingProvider {
             "burtmiller@burtsbees.com"
         )
     )
-    private var recordings = mutableListOf<Recording>()
+    private var recordings = mutableListOf<Recording>(
+        Recording(text="An example recording", date = java.util.Date(), title = "Example Recording")
+    )
     override fun getRecording(name: String): Recording {
         recordings.forEach(){
-            rec -> if (rec.text.equals(name)){
+            rec -> if (rec.title.equals(name)){
                 return rec
         }
         }
