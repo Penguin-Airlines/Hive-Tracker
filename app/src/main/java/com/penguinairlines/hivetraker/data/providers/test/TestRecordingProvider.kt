@@ -27,7 +27,7 @@ object TestRecordingProvider : RecordingProvider {
     }
 
     override fun addRecording(recording: Recording) {
-
+        recordings.add(recording)
     }
     override fun setRecordings(recordings: List<Recording>) {
 
