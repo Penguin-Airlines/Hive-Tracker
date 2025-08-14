@@ -10,8 +10,8 @@ This application is designed to help beekeepers monitor hive health, manage insp
 
 ## Installation
 1. Open a web browser on your Android phone.
-2. Navigate to [Hive Tracker Releases](https://github.com/Penguin-Airlines/Hive-Tracker/releases/tag/Release).
-3. Download the “app-default-debug.apk” file to your phone.
+2. Navigate to [Hive Tracker Releases](https://github.com/Penguin-Airlines/Hive-Tracker/releases).
+3. Find the latest release and click on the `app-default-debug.apk` file to download it.
 4. Navigate to the downloaded file in your file manager or downloads app.  
    - This is typically found in the `Downloads` section of your phone's file browser, or in the `Downloads` tab of your browser.
    - If you cannot find it, check the default download location set in your browser or file manager.
