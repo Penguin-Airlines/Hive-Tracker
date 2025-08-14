@@ -35,4 +35,8 @@ class TestProvider: ProviderFactory {
         TestLogProvider.yard=yard
         return TestLogProvider
     }
+
+    override fun getRecordingProvider(yard: Yard): RecordingProvider {
+        return TestTaskProvider
+    }
 }
