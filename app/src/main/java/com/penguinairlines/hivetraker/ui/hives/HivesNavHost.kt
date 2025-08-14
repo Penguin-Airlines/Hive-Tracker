@@ -125,7 +125,7 @@ sealed class HivesDestination() {
         val logName: String,
         val hiveName: String
     ) : HivesDestination()
-    @Serializable
+    @kotlinx.serialization.Serializable
     data class AddLog(
         val hiveName: String
     ): HivesDestination()
