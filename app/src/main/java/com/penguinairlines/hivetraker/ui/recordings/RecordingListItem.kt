@@ -32,7 +32,7 @@ fun RecordingListItem(
             .fillMaxWidth()
             .padding(bottom = 8.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.secondaryContainer
+            containerColor =  MaterialTheme.colorScheme.surfaceVariant
         ),
         shape = RoundedCornerShape(12.dp),
         onClick = onClick

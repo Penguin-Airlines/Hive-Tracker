@@ -21,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.penguinairlines.hivetraker.data.models.HiveStatus
 
 
+
 @Composable
 fun EditHiveScreen(
     hive: Hive,
@@ -39,7 +40,6 @@ fun EditHiveScreen(
     val fakeUser = hive.yard.owner
     val fakeLocation = hive.location
     val fakeStatus = hive.status
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -78,15 +78,10 @@ fun EditHiveScreen(
 
         Button(
             onClick = {
-                val updatedHive = Hive(
-                    name = name,
-                    yard = Yard(yardName, fakeUser),
-                    location = fakeLocation,
-                    status = fakeStatus,
-                    frameCount = frameCountText.toUInt(),
-                    description = description
-                )
-                saveHive(updatedHive)
+                hive.name = name
+                hive.description = description
+                hive.frameCount = frameCountText.toUInt()
+                saveHive(hive)
             },
             enabled = isFormComplete,
             modifier = Modifier.padding(top = 16.dp)

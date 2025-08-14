@@ -11,6 +11,7 @@ import com.penguinairlines.hivetraker.data.models.Yard
 import com.penguinairlines.hivetraker.data.providers.test.TestProvider
 import com.penguinairlines.hivetraker.ui.hives.logs.AddLogScreen
 import com.penguinairlines.hivetraker.ui.hives.logs.LogTemplate
+import kotlinx.serialization.Serializable
 
 @Composable
 fun HivesNavHost(
