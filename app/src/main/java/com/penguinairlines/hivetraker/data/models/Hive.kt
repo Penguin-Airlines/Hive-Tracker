@@ -21,14 +21,4 @@ data class Hive(
     override fun hashCode(): Int {
         return super.hashCode()
     }
-    fun addLog(newLog : Log): Boolean{
-        logList.add(newLog)
-        return true
-    }
-    fun getLog(logName : String): Log{
-        logList.forEach() { log -> if(logName.equals(log.logName))
-            return log
-        }
-        throw NoSuchElementException()
-    }
 }
