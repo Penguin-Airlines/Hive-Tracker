@@ -18,5 +18,6 @@ fun RecordingNavHost(
     ){
     val recordingNavController = rememberNavController()
 
-    val recProvider = providerFactory.ge
+    val recProvider = providerFactory.getRecordingProvider(currentYard)
+
 }
