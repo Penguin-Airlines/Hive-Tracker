@@ -8,6 +8,7 @@ import com.penguinairlines.hivetraker.data.providers.ProviderFactory
 import com.penguinairlines.hivetraker.data.providers.TaskProvider
 import com.penguinairlines.hivetraker.data.providers.UserProvider
 import com.penguinairlines.hivetraker.data.providers.YardProvider
+import com.penguinairlines.hivetraker.data.providers.RecordingProvider
 
 class TestProvider: ProviderFactory {
     override fun getUserProvider(): UserProvider {
@@ -34,5 +35,9 @@ class TestProvider: ProviderFactory {
     override fun getLogProvider(yard: Yard): LogProvider {
         TestLogProvider.yard=yard
         return TestLogProvider
+    }
+
+    override fun getRecordingProvider(yard: Yard): RecordingProvider {
+        return TestRecordingProvider
     }
 }

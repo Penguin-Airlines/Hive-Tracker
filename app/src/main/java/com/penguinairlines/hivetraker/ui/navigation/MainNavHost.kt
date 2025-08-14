@@ -11,6 +11,7 @@ import com.penguinairlines.hivetraker.data.models.Yard
 import com.penguinairlines.hivetraker.data.providers.test.TestProvider
 import com.penguinairlines.hivetraker.ui.hives.HivesNavHost
 import com.penguinairlines.hivetraker.ui.tasks.TasksNavHost
+import com.penguinairlines.hivetraker.ui.recordings.RecordingNavHost
 import kotlinx.serialization.Serializable
 
 @Composable
@@ -41,7 +42,10 @@ fun MainNavHost(
             )
         }
         composable< MainDestination.Recordings> {
-            RecordingsScreen()
+            RecordingNavHost(
+                providerFactory=providerFactory,
+                currentYard=currentYard,
+            )
         }
     }
 }

@@ -9,4 +9,5 @@ interface ProviderFactory {
     fun getHiveProvider(yard: Yard): HiveProvider
     fun getLogProvider(yard : Yard) : LogProvider
     fun getTaskProvider(yard: Yard): TaskProvider
+    fun getRecordingProvider(yard: Yard): RecordingProvider
 }

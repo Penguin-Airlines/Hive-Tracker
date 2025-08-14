@@ -21,7 +21,7 @@ fun HivesNavHost(
     val hiveNavController = rememberNavController()
 
     val hiveProvider = remember { providerFactory.getHiveProvider(currentYard) }
-    val logProvider = providerFactory.getLogProvider(currentYard)
+    val logProvider = remember { providerFactory.getLogProvider(currentYard) }
     NavHost(
         hiveNavController, startDestination = HivesDestination.List
     ) {
@@ -126,7 +126,7 @@ sealed class HivesDestination() {
         val logName: String,
         val hiveName: String
     ) : HivesDestination()
-    @Serializable
+    @kotlinx.serialization.Serializable
     data class AddLog(
         val hiveName: String
     ): HivesDestination()
