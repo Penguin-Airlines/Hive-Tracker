@@ -24,7 +24,6 @@ import com.penguinairlines.hivetraker.data.providers.RecordingProvider
 fun ListRecordingsScreen(
     onRecordingClick: (recording : Recording) -> Unit,
     addRecordingOnClick: () -> Unit,
-    currentYard: Yard,
     modifier: Modifier = Modifier,
     recordingProvider: RecordingProvider
 ){

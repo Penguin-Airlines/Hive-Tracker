@@ -20,7 +20,7 @@ fun HivesNavHost(
     val hiveNavController = rememberNavController()
 
     val hiveProvider = remember { providerFactory.getHiveProvider(currentYard) }
-    val logProvider = providerFactory.getLogProvider(currentYard)
+    val logProvider = remember { providerFactory.getLogProvider(currentYard) }
     NavHost(
         hiveNavController, startDestination = HivesDestination.List
     ) {

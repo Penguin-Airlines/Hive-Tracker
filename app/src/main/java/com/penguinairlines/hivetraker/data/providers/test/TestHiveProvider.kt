@@ -73,10 +73,4 @@ object TestHiveProvider: HiveProvider {
     override fun setHives(hives: List<Hive>) {
         hives.forEach { hive -> setHive(hive) }
     }
-
-    fun setLog(hive: Hive, log:Log){
-        hives.forEach{ i ->
-            if (i.name == hive.name ) i.addLog(log)
-        }
-    }
 }
